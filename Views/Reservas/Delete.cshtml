@@ -1,0 +1,48 @@
+@model SaborPrestigioMVC.Models.Reserva
+
+<h2>Eliminar Reserva</h2>
+
+<div class="alert alert-danger">
+
+    ¿Está seguro de eliminar esta reserva?
+
+</div>
+
+<dl class="row">
+
+    <dt class="col-sm-3">Cliente</dt>
+    <dd class="col-sm-9">
+        @Model.Cliente?.Nombre @Model.Cliente?.Apellido
+    </dd>
+
+    <dt class="col-sm-3">Mesa</dt>
+    <dd class="col-sm-9">
+        Mesa @Model.Mesa?.NumeroMesa
+    </dd>
+
+    <dt class="col-sm-3">Fecha</dt>
+    <dd class="col-sm-9">
+        @Model.FechaReserva.ToString("dd/MM/yyyy")
+    </dd>
+
+    <dt class="col-sm-3">Hora</dt>
+    <dd class="col-sm-9">
+        @Model.HoraReserva
+    </dd>
+
+</dl>
+
+<form asp-action="Delete">
+
+    <input type="hidden" asp-for="IdReserva" />
+
+    <button type="submit" class="btn btn-danger">
+        Eliminar
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Cancelar
+    </a>
+
+</form>

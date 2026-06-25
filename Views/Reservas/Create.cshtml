@@ -1,0 +1,118 @@
+@model SaborPrestigioMVC.Models.Reserva
+
+@{
+    ViewData["Title"] = "Nueva Reserva";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" />
+
+<div class="main-dashboard">
+
+    <div class="dashboard-card">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h2 class="titulo-ventas">📅 Nueva Reserva</h2>
+                <span style="color:#ccc;">Complete los datos de la reserva</span>
+            </div>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+        <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <!-- CLIENTE -->
+            <div class="mb-3">
+                <label class="form-label">Cliente</label>
+                <select asp-for="IdCliente"
+                        class="form-control"
+                        asp-items="ViewBag.Clientes">
+                    <option value="">Seleccione cliente</option>
+                </select>
+                <span asp-validation-for="IdCliente" class="text-danger"></span>
+            </div>
+
+            <!-- MESA -->
+            <div class="mb-3">
+                <label class="form-label">Mesa</label>
+                <select asp-for="IdMesa"
+                        class="form-control"
+                        asp-items="ViewBag.Mesas">
+                    <option value="">Seleccione mesa</option>
+                </select>
+                <span asp-validation-for="IdMesa" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FechaReserva" class="form-label"></label>
+                    <input asp-for="FechaReserva" type="date" class="form-control" />
+                    <span asp-validation-for="FechaReserva" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="HoraReserva" class="form-label"></label>
+                    <input asp-for="HoraReserva" type="time" class="form-control" />
+                    <span asp-validation-for="HoraReserva" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="CantidadPersonas" class="form-label">
+                        Cantidad de Personas
+                    </label>
+
+                    <input asp-for="CantidadPersonas"
+                           type="number"
+                           min="1"
+                           class="form-control" />
+
+                    <span asp-validation-for="CantidadPersonas"
+                          class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- ORIGEN (CORREGIDO) -->
+            <div class="mb-3">
+                <label class="form-label">Origen de la Reserva</label>
+
+                <select asp-for="Origen" class="form-control">
+                    <option value="">Seleccione origen</option>
+                    <option value="Web">Web</option>
+                    <option value="Teléfono">Teléfono</option>
+                    <option value="Presencial">Presencial</option>
+                </select>
+
+                <span asp-validation-for="Origen" class="text-danger"></span>
+            </div>
+
+            <hr />
+
+            <div class="d-flex gap-2">
+
+                <button type="submit" class="btn btn-warning fw-bold">
+                    💾 Registrar Reserva
+                </button>
+
+                <a asp-action="Index" class="btn btn-outline-light">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

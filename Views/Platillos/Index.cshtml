@@ -1,0 +1,108 @@
+@model IEnumerable<SaborPrestigioMVC.Models.Platillo>
+
+@{
+    ViewData["Title"] = "Platillos";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" />
+
+<div class="dashboard-card">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <h4 class="titulo-estados">🍽️ Gestión de Platillos</h4>
+
+        <a asp-action="Create" class="btn btn-warning fw-bold">
+            + Registrar Platillo
+        </a>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-hover table-dark table-striped align-middle">
+
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Categoría</th>
+                    <th>Tiempo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td><strong>@item.NombrePlatillo</strong></td>
+
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.DescripcionGourmet))
+                            {
+                                @(item.DescripcionGourmet.Length > 60
+                                    ? item.DescripcionGourmet.Substring(0, 60) + "..."
+                                    : item.DescripcionGourmet)
+                            }
+                        </td>
+
+                        <td>
+                            <strong>S/ @item.PrecioVenta.ToString("0.00")</strong>
+                        </td>
+
+                        <td>
+                            @(item.CategoriaPlato != null
+                                ? item.CategoriaPlato.NombreCategoria
+                                : "Sin categoría")
+                        </td>
+
+                        <td>@item.TiempoEstimadoMin min</td>
+
+                        <td>
+                            @if (item.Disponibilidad)
+                            {
+                                <span class="badge bg-success">Disponible</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Agotado</span>
+                            }
+                        </td>
+
+                        <td>
+
+                            <a asp-action="Edit"
+                               asp-route-id="@item.IdPlatillo"
+                               class="btn btn-sm btn-primary">
+                                Editar
+                            </a>
+
+                            <a asp-action="Details"
+                               asp-route-id="@item.IdPlatillo"
+                               class="btn btn-sm btn-info text-white">
+                                Ver
+                            </a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@item.IdPlatillo"
+                               class="btn btn-sm btn-danger">
+                                Eliminar
+                            </a>
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

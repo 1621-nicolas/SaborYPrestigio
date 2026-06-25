@@ -1,0 +1,123 @@
+@model SaborPrestigioMVC.Models.Cliente
+
+@{
+    ViewData["Title"] = "Editar Cliente";
+}
+
+<div class="main-dashboard">
+
+    ```
+    <div class="dashboard-card">
+
+        <h2 class="mb-4 text-warning">
+            ✏️ Editar Cliente
+        </h2>
+
+        <form asp-action="Edit">
+
+            <input type="hidden" asp-for="IdCliente" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="DniRuc" class="form-label"></label>
+
+                    <input asp-for="DniRuc"
+                           maxlength="8"
+                           class="form-control" />
+
+                    <span asp-validation-for="DniRuc"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Telefono" class="form-label"></label>
+
+                    <input asp-for="Telefono"
+                           maxlength="9"
+                           class="form-control" />
+
+                    <span asp-validation-for="Telefono"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Nombre" class="form-label"></label>
+
+                    <input asp-for="Nombre"
+                           class="form-control" />
+
+                    <span asp-validation-for="Nombre"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Apellido" class="form-label"></label>
+
+                    <input asp-for="Apellido"
+                           class="form-control" />
+
+                    <span asp-validation-for="Apellido"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mb-4">
+                    <label asp-for="Email" class="form-label"></label>
+
+                    <input asp-for="Email"
+                           class="form-control" />
+
+                    <span asp-validation-for="Email"
+                          class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-gold">
+                💾 Guardar Cambios
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Cancelar
+            </a>
+
+        </form>
+
+    </div>
+    ```
+
+</div>
+
+@section Scripts {
+
+    ```
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+
+        document.getElementById("DniRuc")
+            .addEventListener("input", function () {
+
+                this.value =
+                    this.value.replace(/\D/g,'');
+            });
+
+        document.getElementById("Telefono")
+            .addEventListener("input", function () {
+
+                this.value =
+                    this.value.replace(/\D/g,'');
+            });
+
+    </script>
+    ```
+
+}

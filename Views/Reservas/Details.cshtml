@@ -1,0 +1,55 @@
+@model SaborPrestigioMVC.Models.Reserva
+
+<h2>Detalle de Reserva</h2>
+
+<hr />
+
+<dl class="row">
+
+    <dt class="col-sm-3">Cliente</dt>
+    <dd class="col-sm-9">
+        @Model.Cliente?.Nombre @Model.Cliente?.Apellido
+    </dd>
+
+    <dt class="col-sm-3">Mesa</dt>
+    <dd class="col-sm-9">
+        Mesa @Model.Mesa?.NumeroMesa
+    </dd>
+
+    <dt class="col-sm-3">Fecha</dt>
+    <dd class="col-sm-9">
+        @Model.FechaReserva.ToString("dd/MM/yyyy")
+    </dd>
+
+    <dt class="col-sm-3">Hora</dt>
+    <dd class="col-sm-9">
+        @Model.HoraReserva
+    </dd>
+
+    <dt class="col-sm-3">Personas</dt>
+    <dd class="col-sm-9">
+        @Model.CantidadPersonas
+    </dd>
+
+    <dt class="col-sm-3">Origen</dt>
+    <dd class="col-sm-9">
+        @Model.Origen
+    </dd>
+
+    <dt class="col-sm-3">Estado</dt>
+    <dd class="col-sm-9">
+        @Model.EstadoReserva
+    </dd>
+
+</dl>
+
+<a asp-action="Edit"
+   asp-route-idreserva="@Model.IdReserva"
+   class="btn btn-warning">
+    Editar
+</a>
+
+<a asp-action="Index"
+   class="btn btn-secondary">
+    Volver
+</a>

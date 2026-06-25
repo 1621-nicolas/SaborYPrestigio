@@ -1,0 +1,74 @@
+@model SaborPrestigioMVC.Models.Platillo
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Platillo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdPlatillo" />
+            <div class="form-group">
+                <label asp-for="NombrePlatillo" class="control-label"></label>
+                <input asp-for="NombrePlatillo" class="form-control" />
+                <span asp-validation-for="NombrePlatillo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DescripcionGourmet" class="control-label"></label>
+                <input asp-for="DescripcionGourmet" class="form-control" />
+                <span asp-validation-for="DescripcionGourmet" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PrecioVenta" class="control-label"></label>
+                <input asp-for="PrecioVenta" class="form-control" />
+                <span asp-validation-for="PrecioVenta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdCategoria" class="control-label"></label>
+                <input asp-for="IdCategoria" class="form-control" />
+                <span asp-validation-for="IdCategoria" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TiempoEstimadoMin" class="control-label"></label>
+                <input asp-for="TiempoEstimadoMin" class="form-control" />
+                <span asp-validation-for="TiempoEstimadoMin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Disponibilidad" class="control-label"></label>
+                <input asp-for="Disponibilidad" class="form-check-input" />
+                <span asp-validation-for="Disponibilidad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoriaPlato" class="control-label"></label>
+                <input asp-for="CategoriaPlato" class="form-control" />
+                <span asp-validation-for="CategoriaPlato" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DetallePedidos" class="control-label"></label>
+                <input asp-for="DetallePedidos" class="form-control" />
+                <span asp-validation-for="DetallePedidos" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecetasPlatillo" class="control-label"></label>
+                <input asp-for="RecetasPlatillo" class="form-control" />
+                <span asp-validation-for="RecetasPlatillo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

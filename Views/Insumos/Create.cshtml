@@ -1,0 +1,60 @@
+@model SaborPrestigioMVC.Models.Insumo
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Insumo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="NombreInsumo" class="control-label"></label>
+                <input asp-for="NombreInsumo" class="form-control" />
+                <span asp-validation-for="NombreInsumo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UnidadMedida" class="control-label"></label>
+                <input asp-for="UnidadMedida" class="form-control" />
+                <span asp-validation-for="UnidadMedida" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StockActual" class="control-label"></label>
+                <input asp-for="StockActual" class="form-control" />
+                <span asp-validation-for="StockActual" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StockMinimo" class="control-label"></label>
+                <input asp-for="StockMinimo" class="form-control" />
+                <span asp-validation-for="StockMinimo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PrecioCostoPromedio" class="control-label"></label>
+                <input asp-for="PrecioCostoPromedio" class="form-control" />
+                <span asp-validation-for="PrecioCostoPromedio" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="RecetasPlatillo" class="control-label"></label>
+                <input asp-for="RecetasPlatillo" class="form-control" />
+                <span asp-validation-for="RecetasPlatillo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

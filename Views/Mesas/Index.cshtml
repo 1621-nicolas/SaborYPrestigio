@@ -1,0 +1,124 @@
+@model IEnumerable<SaborPrestigioMVC.Models.Mesa>
+
+@{
+    ViewData["Title"] = "Mesas";
+}
+
+<div class="main-dashboard">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="titulo-ventas">Gestión de Mesas</h2>
+            <span style="color:#ccc;">Control de disponibilidad del restaurante</span>
+        </div>
+
+        <a asp-action="Create" class="btn btn-gold">
+            + Nueva Mesa
+        </a>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="dashboard-card">
+
+        <div class="table-responsive">
+
+            <table class="table table-dark table-hover align-middle custom-table">
+
+                <thead>
+                    <tr>
+                        <th>Mesa</th>
+                        <th>Capacidad</th>
+                        <th>Zona</th>
+                        <th>Estado</th>
+                        <th>Reservas</th>
+                        <th>Pedidos</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr class="table-row-glow">
+
+                            <!-- NUMERO MESA -->
+                            <td>
+                                <span class="badge bg-secondary">
+                                    Mesa #@item.NumeroMesa
+                                </span>
+                            </td>
+
+                            <!-- CAPACIDAD -->
+                            <td>
+                                🪑 @item.Capacidad personas
+                            </td>
+
+                            <!-- ZONA -->
+                            <td>
+                                📍 @item.Zona
+                            </td>
+
+                            <!-- ESTADO (VISUAL PREMIUM) -->
+                            <td>
+
+                                @if (item.Estado == "Disponible")
+                                {
+                                    <span class="badge bg-success">Disponible</span>
+                                }
+                                else if (item.Estado == "Ocupada")
+                                {
+                                    <span class="badge bg-warning text-dark">Ocupada</span>
+                                }
+                                else if (item.Estado == "Reservada")
+                                {
+                                    <span class="badge bg-secondary">Reservada</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Fuera de servicio</span>
+                                }
+
+                            </td>
+
+                            <!-- RESERVAS -->
+                            <td>
+                                📅 @(item.Reservas?.Count ?? 0)
+                            </td>
+
+                            <!-- PEDIDOS -->
+                            <td>
+                                🍽 @(item.Pedidos?.Count ?? 0)
+                            </td>
+
+                            <!-- ACCIONES -->
+                            <td class="text-center">
+                                <a asp-action="Edit"
+                                   asp-route-idmesa="@item.IdMesa"
+                                   class="btn btn-sm btn-outline-warning">
+                                    Editar
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-idmesa="@item.IdMesa"
+                                   class="btn btn-sm btn-outline-danger">
+                                    Desactivar
+                                </a>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

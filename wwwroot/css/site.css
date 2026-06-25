@@ -1,0 +1,119 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+
+
+:root {
+    --bg: #0b0b0b;
+    --bg-soft: #151515;
+    --card: #1c1c1c;
+    --gold: #D4AF37;
+    --gold-soft: #f5d76e;
+    --text: #ffffff;
+    --muted: #bdbdbd;
+    --shadow: 0 10px 30px rgba(0,0,0,.5);
+}
+
+html {
+    font-size: 16px;
+    min-height: 100%;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ===================== SCROLL ===================== */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 20px;
+}
+
+/* ===================== LINKS ===================== */
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ===================== INPUTS ===================== */
+
+.form-control {
+    background: #222;
+    border: 1px solid #333;
+    color: white;
+}
+
+    .form-control:focus {
+        background: #222;
+        color: white;
+        border-color: var(--gold);
+        box-shadow: 0 0 0 .2rem rgba(212,175,55,.25);
+    }
+
+/* ===================== SELECT ===================== */
+
+.form-select {
+    background: #222;
+    color: white;
+    border: 1px solid #333;
+}
+
+/* ===================== TABLAS ===================== */
+
+.table {
+    color: white;
+}
+
+    .table thead {
+        background: var(--gold);
+        color: black;
+    }
+
+    .table tbody tr {
+        border-color: #333;
+    }
+
+        .table tbody tr:hover {
+            background: #272727;
+        }
+
+/* ===================== BOTÓN GOLD ===================== */
+
+.btn-gold {
+    background: var(--gold);
+    color: black;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    transition: .3s;
+}
+
+    .btn-gold:hover {
+        background: var(--gold-light);
+        transform: translateY(-2px);
+    }
+
+/* ===================== CARDS (IMPORTANTE) ===================== */
+
+.card {
+    border: none;
+    background: transparent;
+}

@@ -1,0 +1,65 @@
+@model SaborPrestigioMVC.Models.ComprobantePago
+
+@{
+    ViewData["Title"] = "Emitir Comprobante";
+}
+
+<h1>Emitir Comprobante</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-5">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="IdPedido">Pedido</label>
+                <select asp-for="IdPedido" asp-items="ViewBag.Pedidos" class="form-control">
+                    <option value="">Seleccione Pedido</option>
+                </select>
+                <span asp-validation-for="IdPedido" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="TipoComprobante">Tipo de Comprobante</label>
+                <select asp-for="TipoComprobante" class="form-control">
+                    <option value="Boleta">Boleta</option>
+                    <option value="Factura">Factura</option>
+                </select>
+                <span asp-validation-for="TipoComprobante" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Serie">Serie</label>
+                <input asp-for="Serie" class="form-control" placeholder="B001 o F001" />
+                <span asp-validation-for="Serie" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Correlativo">Correlativo</label>
+                <input asp-for="Correlativo" class="form-control" />
+                <span asp-validation-for="Correlativo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="MetodoPago">Método de Pago</label>
+                <select asp-for="MetodoPago" class="form-control">
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Tarjeta Crédito/Débito">Tarjeta Crédito/Débito</option>
+                    <option value="Yape/Plin">Yape/Plin</option>
+                </select>
+                <span asp-validation-for="MetodoPago" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Emitir Comprobante</button>
+            <a asp-action="Index" class="btn btn-secondary">Volver</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

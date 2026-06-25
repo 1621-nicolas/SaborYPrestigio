@@ -1,0 +1,103 @@
+@model IEnumerable<SaborPrestigioMVC.Models.Insumo>
+
+@{
+    ViewData["Title"] = "Insumos";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" />
+
+<div class="dashboard-card">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <h4 class="titulo-estados">📦 Gestión de Insumos</h4>
+
+        <a asp-action="Create" class="btn btn-warning fw-bold">
+            + Nuevo Insumo
+        </a>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-hover table-dark table-striped align-middle">
+
+            <thead>
+                <tr>
+                    <th>Insumo</th>
+                    <th>Unidad</th>
+                    <th>Stock Actual</th>
+                    <th>Stock Mínimo</th>
+                    <th>Precio Promedio</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td><strong>@item.NombreInsumo</strong></td>
+
+                        <td>@item.UnidadMedida</td>
+
+                        <td>
+                            @item.StockActual
+                        </td>
+
+                        <td>@item.StockMinimo</td>
+
+                        <td>S/ @item.PrecioCostoPromedio.ToString("0.00")</td>
+
+                        <td>
+
+                            @if (item.StockActual <= item.StockMinimo)
+                            {
+                                <span class="badge bg-danger">Bajo stock</span>
+                            }
+                            else if (item.StockActual <= (item.StockMinimo * 1.5m))
+                            {
+                                <span class="badge bg-warning text-dark">Stock medio</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">OK</span>
+                            }
+
+                        </td>
+
+                        <td>
+
+                            <a asp-action="Edit"
+                               asp-route-id="@item.IdInsumo"
+                               class="btn btn-sm btn-primary">
+                                Editar
+                            </a>
+
+                            <a asp-action="Details"
+                               asp-route-id="@item.IdInsumo"
+                               class="btn btn-sm btn-info text-white">
+                                Ver
+                            </a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@item.IdInsumo"
+                               class="btn btn-sm btn-danger">
+                                Eliminar
+                            </a>
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

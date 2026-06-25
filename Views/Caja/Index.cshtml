@@ -1,0 +1,172 @@
+﻿@model SaborPrestigioMVC.Models.CajaDashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard Caja";
+}
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            💰 Caja
+            <small>Sabor y Prestigio</small>
+        </div>
+
+        <a class="active">💰 Dashboard Caja</a>
+        <a asp-controller="Pedidos" asp-action="Index">🛒 Pedidos</a>
+        <a asp-controller="ComprobantedePago" asp-action="Index">🧾 Comprobantes</a>
+        <a asp-controller="Home" asp-action="Index">📊 Dashboard General</a>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-dashboard">
+
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h2 class="mb-1">Dashboard Caja</h2>
+                <span>Bienvenido, <strong style="color:#D4AF37;">Cajero</strong></span>
+            </div>
+
+            <span class="hero-date">
+                📅 @DateTime.Now.ToString("dd/MM/yyyy")
+            </span>
+
+        </div>
+
+        <!-- KPI -->
+        <div class="kpi-row">
+
+            <div class="kpi-card">
+                <h6>Pedidos por Cobrar</h6>
+                <h2>@Model.PedidosPorCobrar</h2>
+            </div>
+
+            <div class="kpi-card">
+                <h6>Comprobantes Emitidos</h6>
+                <h2>@Model.ComprobantesEmitidos</h2>
+            </div>
+
+            <div class="kpi-card">
+                <h6>Ventas del Día</h6>
+                <h2>S/ @Model.VentasDelDia.ToString("0.00")</h2>
+            </div>
+
+            <div class="kpi-card">
+                <h6>IGV Recaudado</h6>
+                <h2>S/ @Model.IgvDelDia.ToString("0.00")</h2>
+            </div>
+
+        </div>
+
+        <!-- MÉTODOS DE PAGO -->
+        <div class="dashboard-card mb-4">
+
+            <h4 class="titulo-ventas mb-3">Métodos de Pago</h4>
+
+            <table class="table table-hover table-dark align-middle">
+                <thead>
+                    <tr>
+                        <th>Método</th>
+                        <th>Operaciones</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var metodo in Model.MetodosPago)
+                    {
+                        <tr>
+                            <td>@metodo.MetodoPago</td>
+                            <td>@metodo.Cantidad</td>
+                            <td>S/ @metodo.Total.ToString("0.00")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+        <!-- PEDIDOS -->
+        <div class="dashboard-card mb-4">
+
+            <h4 class="titulo-estados mb-3">Pedidos por Cobrar</h4>
+
+            <table class="table table-hover table-dark align-middle">
+                <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Cliente</th>
+                        <th>Mesa</th>
+                        <th>Total</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var pedido in Model.PedidosPendientesPago)
+                    {
+                        <tr>
+                            <td>#@pedido.IdPedido</td>
+
+                            <td>
+                                @(pedido.Cliente != null
+                                    ? pedido.Cliente.Nombre + " " + pedido.Cliente.Apellido
+                                    : "Sin Cliente")
+                            </td>
+
+                            <td>@(pedido.Mesa != null ? pedido.Mesa.NumeroMesa : 0)</td>
+
+                            <td>S/ @pedido.Total.ToString("0.00")</td>
+
+                            <td>
+                                <a asp-controller="ComprobantedePago"
+                                   asp-action="Create"
+                                   class="btn btn-gold btn-sm">
+                                    Emitir
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+        <!-- HISTORIAL -->
+        <div class="dashboard-card">
+
+            <h4 class="titulo-ventas mb-3">Comprobantes del Día</h4>
+
+            <table class="table table-striped table-dark align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Serie</th>
+                        <th>Correlativo</th>
+                        <th>Método</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var comp in Model.ComprobantesDelDia)
+                    {
+                        <tr>
+                            <td>@comp.Serie</td>
+                            <td>@comp.Correlativo</td>
+                            <td>@comp.MetodoPago</td>
+                            <td>S/ @comp.MontoTotal.ToString("0.00")</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>

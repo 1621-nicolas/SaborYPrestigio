@@ -1,0 +1,148 @@
+@model SaborPrestigioMVC.Models.Mesa
+
+@{
+    ViewData["Title"] = "Editar Mesa";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" />
+
+<div class="main-dashboard">
+
+    <div class="dashboard-card">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h2 class="titulo-ventas">🍽 Editar Mesa</h2>
+                <span style="color:#ccc;">
+                    Modifique la información de la mesa
+                </span>
+            </div>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+        <form asp-action="Edit">
+
+            <input type="hidden" asp-for="IdMesa" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="alert alert-danger">
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label asp-for="NumeroMesa" class="form-label">
+                        Número de Mesa
+                    </label>
+
+                    <input asp-for="NumeroMesa"
+                           class="form-control"
+                           min="1" />
+
+                    <span asp-validation-for="NumeroMesa"
+                          class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label asp-for="Capacidad" class="form-label">
+                        Capacidad
+                    </label>
+
+                    <input asp-for="Capacidad"
+                           type="number"
+                           min="1"
+                           max="20"
+                           class="form-control" />
+
+                    <span asp-validation-for="Capacidad"
+                          class="text-danger"></span>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label asp-for="Zona" class="form-label">
+                        Zona
+                    </label>
+
+                    <select asp-for="Zona"
+                            class="form-select">
+
+                        <option value="Salón Principal">
+                            Salón Principal
+                        </option>
+
+                        <option value="Zona VIP">
+                            Zona VIP
+                        </option>
+
+                        <option value="Terraza">
+                            Terraza
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label asp-for="Estado" class="form-label">
+                        Estado
+                    </label>
+
+                    <select asp-for="Estado"
+                            class="form-select">
+
+                        <option value="Disponible">
+                            Disponible
+                        </option>
+
+                        <option value="Fuera de Servicio">
+                            Fuera de Servicio
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <hr />
+
+            <div class="d-flex gap-2">
+
+                <button type="submit"
+                        class="btn btn-warning fw-bold">
+                    💾 Guardar Cambios
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-light">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

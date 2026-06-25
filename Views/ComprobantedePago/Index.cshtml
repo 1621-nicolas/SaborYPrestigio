@@ -1,0 +1,102 @@
+@model IEnumerable<SaborPrestigioMVC.Models.ComprobantePago>
+
+@{
+    ViewData["Title"] = "Comprobantes de Pago";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" />
+
+<div class="dashboard-card">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <h4 class="titulo-estados">🧾 Comprobantes de Pago</h4>
+
+        <a asp-action="Create" class="btn btn-warning fw-bold">
+            + Emitir Comprobante
+        </a>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-hover table-dark table-striped align-middle">
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Pedido</th>
+                    <th>Cliente</th>
+                    <th>Documento</th>
+                    <th>Tipo</th>
+                    <th>Serie</th>
+                    <th>Correlativo</th>
+                    <th>Fecha</th>
+                    <th>Método</th>
+                    <th>Subtotal</th>
+                    <th>IGV</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td><strong>@item.IdComprobante</strong></td>
+
+                        <td>#@item.IdPedido</td>
+
+                        <td>@item.ClienteNombreORazonSocial</td>
+
+                        <td>@item.ClienteDocumento</td>
+
+                        <td>
+                            <span class="badge bg-secondary">@item.TipoComprobante</span>
+                        </td>
+
+                        <td>@item.Serie</td>
+
+                        <td>@item.Correlativo</td>
+
+                        <td>@item.FechaEmision.ToString("dd/MM/yyyy HH:mm")</td>
+
+                        <td>@item.MetodoPago</td>
+
+                        <td>S/ @item.MontoSubtotal.ToString("0.00")</td>
+
+                        <td>S/ @item.MontoIgv.ToString("0.00")</td>
+
+                        <td>
+                            <strong>S/ @item.MontoTotal.ToString("0.00")</strong>
+                        </td>
+
+                        <td>
+
+                            <a asp-action="Details"
+                               asp-route-idcomprobante="@item.IdComprobante"
+                               class="btn btn-sm btn-info text-white">
+                                Ver
+                            </a>
+
+                            <a asp-action="Delete"
+                               asp-route-idcomprobante="@item.IdComprobante"
+                               class="btn btn-sm btn-danger">
+                                Eliminar
+                            </a>
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

@@ -1,0 +1,129 @@
+@model IEnumerable<SaborPrestigioMVC.Models.Pedido>
+
+@{
+    ViewData["Title"] = "Pedidos";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" />
+
+<div class="dashboard-card">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <h4 class="titulo-estados">🛒 Gestión de Pedidos</h4>
+
+        <a asp-action="Create" class="btn btn-warning fw-bold">
+            + Registrar Pedido
+        </a>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-hover table-dark table-striped align-middle">
+
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Cliente</th>
+                    <th>Empleado</th>
+                    <th>Mesa</th>
+                    <th>Tipo</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td><strong>#@item.IdPedido</strong></td>
+
+                        <td>
+                            @(item.Cliente != null
+                                ? item.Cliente.Nombre + " " + item.Cliente.Apellido
+                                : "Sin cliente")
+                        </td>
+
+                        <td>
+                            @(item.Empleado != null
+                                ? item.Empleado.Nombre + " " + item.Empleado.Apellido
+                                : "Sin empleado")
+                        </td>
+
+                        <td>
+                            @(item.Mesa != null
+                                ? "Mesa " + item.Mesa.NumeroMesa
+                                : "Sin mesa")
+                        </td>
+
+                        <td>@item.TipoPedido</td>
+
+                        <td>@item.FechaPedido.ToString("dd/MM/yyyy HH:mm")</td>
+
+                        <td>
+
+                            @if (item.EstadoPedido == "Pendiente")
+                            {
+                                <span class="badge bg-warning text-dark">Pendiente</span>
+                            }
+                            else if (item.EstadoPedido == "En Preparación")
+                            {
+                                <span class="badge bg-primary">En preparación</span>
+                            }
+                            else if (item.EstadoPedido == "Listo")
+                            {
+                                <span class="badge bg-success">Listo</span>
+                            }
+                            else if (item.EstadoPedido == "Entregado")
+                            {
+                                <span class="badge bg-secondary">Entregado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-dark">@item.EstadoPedido</span>
+                            }
+
+                        </td>
+
+                        <td>
+                            <strong>S/ @item.Total.ToString("0.00")</strong>
+                        </td>
+
+                        <td>
+
+                            <a asp-action="Edit"
+                               asp-route-id="@item.IdPedido"
+                               class="btn btn-sm btn-primary">
+                                Editar
+                            </a>
+
+                            <a asp-action="Details"
+                               asp-route-id="@item.IdPedido"
+                               class="btn btn-sm btn-info text-white">
+                                Ver
+                            </a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@item.IdPedido"
+                               class="btn btn-sm btn-danger">
+                                Eliminar
+                            </a>
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

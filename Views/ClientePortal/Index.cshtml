@@ -1,0 +1,204 @@
+﻿@model SaborPrestigioMVC.Models.ClienteDashboardViewModel
+
+@{
+    ViewData["Title"] = "Portal Cliente";
+}
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            🍽 Sabor y Prestigio
+            <small>Portal Cliente</small>
+        </div>
+
+        <a class="active">🏠 Inicio</a>
+
+        <a asp-controller="Reservas" asp-action="Create">📅 Realizar Reserva</a>
+        <a asp-controller="Platillos" asp-action="Index">🍴 Ver Menú</a>
+        <a asp-controller="Pedidos" asp-action="Create">🛒 Pedido Web</a>
+        <a asp-controller="Pedidos" asp-action="Index">📦 Mis Pedidos</a>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-dashboard">
+
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h2 class="mb-1">Portal del Cliente</h2>
+                <span style="color:#ddd;">Bienvenido a Sabor y Prestigio</span>
+            </div>
+
+            <span class="hero-date">
+                📅 @DateTime.Now.ToString("dd/MM/yyyy")
+            </span>
+
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-row">
+
+            <div class="kpi-card">
+                <h6>Platillos Disponibles</h6>
+                <h2>@Model.PlatillosDisponibles</h2>
+            </div>
+
+            <div class="kpi-card">
+                <h6>Reservas Activas</h6>
+                <h2>@Model.ReservasActivas</h2>
+            </div>
+
+            <div class="kpi-card">
+                <h6>Pedidos Web</h6>
+                <h2>@Model.PedidosWebActivos</h2>
+            </div>
+
+        </div>
+
+        <!-- ACCESOS RÁPIDOS -->
+        <div class="dashboard-card mb-4">
+
+            <h4 class="titulo-ventas mb-3">Accesos Rápidos</h4>
+
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <a asp-controller="Reservas"
+                       asp-action="Create"
+                       class="btn btn-gold w-100 quick-btn">
+                        📅 Reserva
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a asp-controller="Platillos"
+                       asp-action="Index"
+                       class="btn btn-dark w-100 quick-btn">
+                        🍴 Menú
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a asp-controller="Pedidos"
+                       asp-action="Create"
+                       class="btn btn-success w-100 quick-btn">
+                        🛒 Pedido Web
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- MENÚ -->
+        <div class="dashboard-card mb-4">
+
+            <h4 class="titulo-ventas mb-3">Menú Disponible</h4>
+
+            <div class="row">
+
+                @foreach (var platillo in Model.MenuPlatillos)
+                {
+                    <div class="col-md-4 mb-3">
+
+                        <div class="card-premium p-3 h-100">
+
+                            <h5 class="mb-2" style="color:#D4AF37;">
+                                @platillo.NombrePlatillo
+                            </h5>
+
+                            <p style="color:#ccc;">
+                                @platillo.DescripcionGourmet
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <strong style="color:white;">
+                                    S/ @platillo.PrecioVenta.ToString("0.00")
+                                </strong>
+
+                                <span class="badge bg-success">
+                                    Disponible
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+        <!-- PEDIDOS -->
+        <div class="dashboard-card">
+
+            <h4 class="titulo-estados mb-3">Estado de Mis Pedidos</h4>
+
+            <table class="table table-hover table-dark align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var pedido in Model.PedidosWeb)
+                    {
+                        <tr>
+
+                            <td>#@pedido.IdPedido</td>
+
+                            <td>
+                                @pedido.FechaPedido.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+
+                            <td>
+                                @if (pedido.EstadoPedido == "En Espera")
+                                {
+                                    <span class="badge bg-warning text-dark">En Espera</span>
+                                }
+                                else if (pedido.EstadoPedido == "En Preparación")
+                                {
+                                    <span class="badge bg-primary">En Preparación</span>
+                                }
+                                else if (pedido.EstadoPedido == "Listo")
+                                {
+                                    <span class="badge bg-success">Listo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        @pedido.EstadoPedido
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                S/ @pedido.Total.ToString("0.00")
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>

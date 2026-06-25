@@ -1,0 +1,95 @@
+﻿@model SaborPrestigioMVC.Models.SalonDashboardViewModel
+
+@{
+    ViewData["Title"] = "Gestión de Salón";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" />
+
+<div class="salon-layout">
+
+    <aside class="mini-sidebar">
+        <a asp-controller="Home" asp-action="Index">☰</a>
+        <a asp-controller="Home" asp-action="Index">🏠</a>
+        <a class="active" asp-controller="Salon" asp-action="Index">▦</a>
+        <a asp-controller="Pedidos" asp-action="Index">🍴</a>
+        <a asp-controller="Reservas" asp-action="Index">📅</a>
+        <a asp-controller="Mesas" asp-action="Index">⚙</a>
+    </aside>
+
+    <main class="salon-main">
+
+        <div class="salon-topbar">
+            <div></div>
+            <strong>🍽 Sabor y Prestigio</strong>
+            <span>👤</span>
+        </div>
+
+        <div class="salon-card">
+            <h2 class="text-center mb-4">Gestión de Mesas</h2>
+
+            <div class="estado-tabs">
+                <div class="estado disponible">Disponible</div>
+                <div class="estado ocupada">Ocupada</div>
+                <div class="estado reservada">Reservada</div>
+                <div class="estado fuera">Fuera de Servicio</div>
+            </div>
+
+            <h5 class="zona-title">SALÓN PRINCIPAL</h5>
+
+            <div class="mesa-grid">
+                @foreach (var mesa in Model.Mesas)
+                {
+                    var claseEstado = mesa.Estado == "Disponible"
+                        ? "mesa-card disponible-card"
+                        : mesa.Estado == "Ocupada"
+                            ? "mesa-card ocupada-card"
+                            : mesa.Estado == "Reservada"
+                                ? "mesa-card reservada-card"
+                                : "mesa-card fuera-card";
+
+                    <div class="@claseEstado">
+                        <h5>MESA @mesa.NumeroMesa</h5>
+                        <p>@mesa.Zona</p>
+                        <div class="mesa-icon">▤</div>
+
+                        <div class="mesa-info">
+                            <span>👥 @mesa.Capacidad</span>
+                            <span>🪑 @mesa.Capacidad</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="dashboard-card mt-4">
+            <h4>Pedidos Activos</h4>
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Cliente</th>
+                        <th>Mesa</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var pedido in Model.PedidosActivosLista)
+                    {
+                        <tr>
+                            <td>#@pedido.IdPedido</td>
+                            <td>@(pedido.Cliente != null ? pedido.Cliente.Nombre : "Sin cliente")</td>
+                            <td>@(pedido.Mesa != null ? pedido.Mesa.NumeroMesa : 0)</td>
+                            <td><span class="badge bg-warning text-dark">@pedido.EstadoPedido</span></td>
+                            <td>S/ @pedido.Total.ToString("0.00")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
