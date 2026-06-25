@@ -10,7 +10,7 @@ namespace SaborPrestigioMVC.Models
         [Column("id_comprobante")]
         public long IdComprobante { get; set; }
 
-        [Column("idpedido")]
+        [Column("id_pedido")]
         public long IdPedido { get; set; }
 
         [Required]
