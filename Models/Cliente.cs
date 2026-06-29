@@ -35,6 +35,9 @@ namespace SaborPrestigioMVC.Models
         [Column("email")]
         public string Email { get; set; }
 
+        [Column("contrasenia_hash")]
+        public string? ContraseniaHash { get; set; }
+
         [Column("fecha_registro")]
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
 

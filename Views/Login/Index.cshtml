@@ -1,0 +1,186 @@
+﻿@{
+    Layout = null; // Se desactiva el layout general para que la pantalla de login ocupe todo el espacio
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sabor y Prestigio - Sistema de Autenticación</title>
+    <style>
+            /* Estilos base formales */
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #1a1a1a;
+                color: #ffffff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .login-container {
+                background-color: #262626;
+                padding: 2.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+                width: 100%;
+                max-width: 400px;
+                border: 1px solid #333;
+            }
+
+            .login-header {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+                .login-header h2 {
+                    margin: 0;
+                    color: #c5a880;
+                    font-size: 1.8rem;
+                }
+
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+
+                .form-group label {
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    font-size: 0.85rem;
+                    color: #c5a880;
+                }
+
+                .form-group input, .form-group select {
+                    width: 100%;
+                    padding: 0.75rem;
+                    border: 1px solid #444;
+                    background-color: #1a1a1a;
+                    color: white;
+                    border-radius: 4px;
+                    box-sizing: border-box;
+                }
+
+            .btn-login {
+                width: 100%;
+                padding: 0.75rem;
+                background-color: #c5a880;
+                color: #1a1a1a;
+                border: none;
+                border-radius: 4px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .alert-message {
+                background-color: rgba(255, 77, 77, 0.1);
+                border: 1px solid #ff4d4d;
+                color: #ff4d4d;
+                padding: 0.75rem;
+                border-radius: 4px;
+                margin-bottom: 1rem;
+                display: none;
+                text-align: center;
+            }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h2>Sabor & Prestigio</h2>
+        </div>
+        <div id="alertBox" class="alert-message"></div>
+
+        <form id="loginForm" onsubmit="procesarLogin(event)">
+            <div class="form-group">
+                <label for="tipoAcceso">Tipo de Acceso</label>
+                <select id="tipoAcceso" onchange="actualizarPlaceholder()">
+                    <option value="EMPLEADO">Personal del Restaurante</option>
+                    <option value="CLIENTE">Cliente General</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label id="lblUsuario" for="txtUsuario">Usuario Interno</label>
+                <input type="text" id="txtUsuario" required>
+            </div>
+
+            <div class="form-group">
+                <label for="txtPassword">Contraseña</label>
+                <input type="password" id="txtPassword" required>
+            </div>
+
+            <button type="submit" class="btn-login">INGRESAR AL SISTEMA</button>
+
+            <div id="seccionRegistro" style="text-align: center; margin-top: 1.5rem; border-top: 1px solid #444; padding-top: 1rem; display: none;">
+                <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">¿Es un cliente nuevo?</p>
+                <a href="/Login/RegistrarCliente" style="color: #c5a880; text-decoration: none; font-weight: bold; font-size: 0.95rem; transition: color 0.3s;">
+                    Crear cuenta de Cliente
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+            // Asegurar que la interfaz cargue con el estado correcto del menú desplegable
+            window.onload = function() {
+                actualizarPlaceholder();
+            };
+
+            function actualizarPlaceholder() {
+                const tipo = document.getElementById('tipoAcceso').value;
+                const lblUsuario = document.getElementById('lblUsuario');
+                const txtUsuario = document.getElementById('txtUsuario');
+                const seccionRegistro = document.getElementById('seccionRegistro');
+
+                if (tipo === 'CLIENTE') {
+                    lblUsuario.innerText = "Correo Electrónico";
+                    txtUsuario.type = "email";
+                    if (seccionRegistro) seccionRegistro.style.display = "block";
+                } else {
+                    lblUsuario.innerText = "Usuario Interno";
+                    txtUsuario.type = "text";
+                    if (seccionRegistro) seccionRegistro.style.display = "none";
+                }
+            }
+
+            async function procesarLogin(event) {
+                event.preventDefault(); // Evitar recarga de página
+
+                const payload = {
+                    TipoAcceso: document.getElementById('tipoAcceso').value,
+                    Usuario: document.getElementById('txtUsuario').value.trim(),
+                    Password: document.getElementById('txtPassword').value
+                };
+
+                try {
+                    // Comunicación con el Controlador C# mediante API Fetch
+                    const response = await fetch('/Login/Autenticar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await response.json();
+
+                    if (data.exito) {
+                        alert("Bienvenido: " + data.nombreCompleto + " | Rol: " + data.rol);
+                        window.location.href = data.urlRedireccion; // Redirección orquestada por el servidor
+                    } else {
+                        mostrarError(data.mensaje);
+                    }
+                } catch (error) {
+                    mostrarError("Error de conexión con el servidor.");
+                    console.error(error);
+                }
+            }
+
+            function mostrarError(mensaje) {
+                const alertBox = document.getElementById('alertBox');
+                alertBox.innerText = mensaje;
+                alertBox.style.display = "block";
+            }
+    </script>
+</body>
+</html>

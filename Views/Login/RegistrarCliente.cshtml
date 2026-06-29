@@ -1,0 +1,227 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sabor y Prestigio - Registro de Cliente</title>
+    <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #1a1a1a;
+                color: #ffffff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .login-container {
+                background-color: #262626;
+                padding: 2.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+                width: 100%;
+                max-width: 450px;
+                border: 1px solid #333;
+            }
+
+            .login-header {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+                .login-header h2 {
+                    margin: 0;
+                    color: #c5a880;
+                    font-size: 1.5rem;
+                    text-transform: uppercase;
+                }
+
+            .row {
+                display: flex;
+                gap: 10px;
+            }
+
+            .form-group {
+                margin-bottom: 1.2rem;
+                flex: 1;
+            }
+
+                .form-group label {
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    font-size: 0.85rem;
+                    color: #c5a880;
+                }
+
+                .form-group input {
+                    width: 100%;
+                    padding: 0.65rem;
+                    border: 1px solid #444;
+                    background-color: #1a1a1a;
+                    color: white;
+                    border-radius: 4px;
+                    box-sizing: border-box;
+                }
+
+            .btn-login {
+                width: 100%;
+                padding: 0.75rem;
+                background-color: #c5a880;
+                color: #1a1a1a;
+                border: none;
+                border-radius: 4px;
+                font-weight: bold;
+                cursor: pointer;
+                margin-top: 1rem;
+            }
+
+            .alert-message {
+                background-color: rgba(255, 77, 77, 0.1);
+                border: 1px solid #ff4d4d;
+                color: #ff4d4d;
+                padding: 0.75rem;
+                border-radius: 4px;
+                margin-bottom: 1rem;
+                display: none;
+                text-align: center;
+            }
+
+            .alert-success {
+                background-color: rgba(76, 175, 80, 0.1);
+                border: 1px solid #4CAF50;
+                color: #4CAF50;
+                padding: 0.75rem;
+                border-radius: 4px;
+                margin-bottom: 1rem;
+                display: none;
+                text-align: center;
+            }
+
+            .back-link {
+                display: block;
+                text-align: center;
+                margin-top: 1.5rem;
+                color: #aaa;
+                text-decoration: none;
+                font-size: 0.9rem;
+                transition: color 0.3s;
+            }
+
+                .back-link:hover {
+                    color: #ffffff;
+                }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h2>Crear Cuenta de Cliente</h2>
+        </div>
+
+        <div id="alertBox" class="alert-message"></div>
+        <div id="successBox" class="alert-success"></div>
+
+        <form id="registroForm" onsubmit="procesarRegistro(event)">
+            <div class="row">
+                <div class="form-group">
+                    <label for="txtDni">DNI / RUC</label>
+                    <input type="text" id="txtDni" maxlength="11" required>
+                </div>
+                <div class="form-group">
+                    <label for="txtTelefono">Teléfono</label>
+                    <input type="text" id="txtTelefono" maxlength="9" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="txtNombre">Nombre(s)</label>
+                    <input type="text" id="txtNombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="txtApellido">Apellidos</label>
+                    <input type="text" id="txtApellido" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="txtEmail">Correo Electrónico</label>
+                <input type="email" id="txtEmail" required>
+            </div>
+
+            <div class="form-group">
+                <label for="txtPassword">Contraseña</label>
+                <input type="password" id="txtPassword" required minlength="6">
+            </div>
+
+            <button type="submit" class="btn-login" id="btnSubmit">REGISTRARSE</button>
+
+            <a href="/Login/Index" class="back-link">← Volver al inicio de sesión</a>
+        </form>
+    </div>
+
+    <script>
+            async function procesarRegistro(event) {
+                event.preventDefault();
+
+                const btnSubmit = document.getElementById('btnSubmit');
+                btnSubmit.disabled = true;
+                btnSubmit.innerText = "PROCESANDO...";
+
+                const payload = {
+                    DniRuc: document.getElementById('txtDni').value.trim(),
+                    Nombre: document.getElementById('txtNombre').value.trim(),
+                    Apellido: document.getElementById('txtApellido').value.trim(),
+                    Telefono: document.getElementById('txtTelefono').value.trim(),
+                    Email: document.getElementById('txtEmail').value.trim(),
+                    Password: document.getElementById('txtPassword').value
+                };
+
+                try {
+                    const response = await fetch('/Login/Registrar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await response.json();
+
+                    if (data.exito) {
+                        mostrarExito(data.mensaje);
+                        setTimeout(() => {
+                            window.location.href = data.urlRedireccion;
+                        }, 2000); // Espera 2 segundos antes de redirigir al login
+                    } else {
+                        mostrarError(data.mensaje);
+                        btnSubmit.disabled = false;
+                        btnSubmit.innerText = "REGISTRARSE";
+                    }
+                } catch (error) {
+                    mostrarError("Error de comunicación con el servidor.");
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerText = "REGISTRARSE";
+                    console.error(error);
+                }
+            }
+
+            function mostrarError(mensaje) {
+                document.getElementById('successBox').style.display = "none";
+                const alertBox = document.getElementById('alertBox');
+                alertBox.innerText = mensaje;
+                alertBox.style.display = "block";
+            }
+
+            function mostrarExito(mensaje) {
+                document.getElementById('alertBox').style.display = "none";
+                const successBox = document.getElementById('successBox');
+                successBox.innerText = mensaje;
+                successBox.style.display = "block";
+            }
+    </script>
+</body>
+</html>
