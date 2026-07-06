@@ -1,80 +1,56 @@
 @model SaborPrestigioMVC.Models.Platillo
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Ficha del Platillo";
 }
 
-<h1>Details</h1>
+<div class="container mt-4 text-white" style="max-width: 650px;">
+    <div class="card bg-dark border-secondary shadow">
+        <div class="card-header bg-black border-secondary py-3">
+            <h4 class="text-warning mb-0"><i class="fas fa-search"></i> Vista de Elemento Gourmet</h4>
+        </div>
+        <div class="card-body p-4">
+            <div class="text-center mb-4">
+                <h2 class="text-white mb-1">@Model.NombrePlatillo</h2>
+                <span class="badge bg-secondary px-3 py-1 text-uppercase">@(Model.CategoriaPlato?.NombreCategoria ?? "Sin Categoría")</span>
+            </div>
 
-<div>
-    <h4>Platillo</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NombrePlatillo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NombrePlatillo)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DescripcionGourmet)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DescripcionGourmet)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PrecioVenta)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PrecioVenta)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdCategoria)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdCategoria)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TiempoEstimadoMin)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TiempoEstimadoMin)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Disponibilidad)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Disponibilidad)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CategoriaPlato)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CategoriaPlato)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DetallePedidos)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DetallePedidos)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RecetasPlatillo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RecetasPlatillo)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdPlatillo">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+            <div class="p-3 bg-black rounded border border-secondary mb-4">
+                <small class="text-muted d-block text-uppercase fw-bold mb-1">Descripción / Nota Gourmet</small>
+                <p class="mb-0 text-white-50" style="font-style: italic;">
+                    "@(string.IsNullOrEmpty(Model.DescripcionGourmet) ? "Sin descripción registrada." : Model.DescripcionGourmet)"
+                </p>
+            </div>
+
+            <div class="row g-3 text-center">
+                <div class="col-6">
+                    <div class="p-3 bg-black rounded border border-secondary">
+                        <small class="text-muted d-block text-uppercase small">Precio de Venta</small>
+                        <span class="fs-4 fw-bold text-warning">S/ @Model.PrecioVenta.ToString("0.00")</span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="p-3 bg-black rounded border border-secondary">
+                        <small class="text-muted d-block text-uppercase small">Tiempo de Preparación</small>
+                        <span class="fs-4 fw-bold text-info">@Model.TiempoEstimadoMin min</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                @if (Model.Disponibilidad)
+                {
+                    <span class="badge bg-success px-4 py-2 text-uppercase">Disponible</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger px-4 py-2 text-uppercase">Agotado</span>
+                }
+            </div>
+        </div>
+        <div class="card-footer bg-black border-secondary text-end py-3">
+            <a asp-action="Edit" asp-route-id="@Model.IdPlatillo" class="btn btn-warning fw-bold px-4">Editar</a>
+            <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Volver</a>
+        </div>
+    </div>
 </div>

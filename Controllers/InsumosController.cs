@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SaborPrestigioMVC.Models;
@@ -14,21 +13,21 @@ public class InsumosController : Controller
     }
 
     // GET: INSUMOS
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index()
     {
         return View(await _context.Insumos.ToListAsync());
     }
 
     // GET: INSUMOS/Details/5
-    public async Task<IActionResult> Details(int? idinsumo)
+    public async Task<IActionResult> Details(int? id) // <-- Cambiado a id
     {
-        if (idinsumo == null)
+        if (id == null)
         {
             return NotFound();
         }
 
         var insumo = await _context.Insumos
-            .FirstOrDefaultAsync(m => m.IdInsumo == idinsumo);
+            .FirstOrDefaultAsync(m => m.IdInsumo == id);
         if (insumo == null)
         {
             return NotFound();
@@ -44,11 +43,9 @@ public class InsumosController : Controller
     }
 
     // POST: INSUMOS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("IdInsumo,NombreInsumo,UnidadMedida,StockActual,StockMinimo,PrecioCostoPromedio,RecetasPlatillo")] Insumo insumo)
+    public async Task<IActionResult> Create([Bind("IdInsumo,NombreInsumo,UnidadMedida,StockActual,StockMinimo,PrecioCostoPromedio")] Insumo insumo)
     {
         if (ModelState.IsValid)
         {
@@ -60,14 +57,14 @@ public class InsumosController : Controller
     }
 
     // GET: INSUMOS/Edit/5
-    public async Task<IActionResult> Edit(int? idinsumo)
+    public async Task<IActionResult> Edit(int? id) // <-- Cambiado a id
     {
-        if (idinsumo == null)
+        if (id == null)
         {
             return NotFound();
         }
 
-        var insumo = await _context.Insumos.FindAsync(idinsumo);
+        var insumo = await _context.Insumos.FindAsync(id);
         if (insumo == null)
         {
             return NotFound();
@@ -76,13 +73,11 @@ public class InsumosController : Controller
     }
 
     // POST: INSUMOS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? idinsumo, [Bind("IdInsumo,NombreInsumo,UnidadMedida,StockActual,StockMinimo,PrecioCostoPromedio,RecetasPlatillo")] Insumo insumo)
+    public async Task<IActionResult> Edit(int id, [Bind("IdInsumo,NombreInsumo,UnidadMedida,StockActual,StockMinimo,PrecioCostoPromedio")] Insumo insumo)
     {
-        if (idinsumo != insumo.IdInsumo)
+        if (id != insumo.IdInsumo)
         {
             return NotFound();
         }
@@ -96,14 +91,8 @@ public class InsumosController : Controller
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!InsumoExists(insumo.IdInsumo))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!InsumoExists(insumo.IdInsumo)) return NotFound();
+                else throw;
             }
             return RedirectToAction(nameof(Index));
         }
@@ -111,15 +100,15 @@ public class InsumosController : Controller
     }
 
     // GET: INSUMOS/Delete/5
-    public async Task<IActionResult> Delete(int? idinsumo)
+    public async Task<IActionResult> Delete(int? id) // <-- Cambiado a id
     {
-        if (idinsumo == null)
+        if (id == null)
         {
             return NotFound();
         }
 
         var insumo = await _context.Insumos
-            .FirstOrDefaultAsync(m => m.IdInsumo == idinsumo);
+            .FirstOrDefaultAsync(m => m.IdInsumo == id);
         if (insumo == null)
         {
             return NotFound();
@@ -131,9 +120,9 @@ public class InsumosController : Controller
     // POST: INSUMOS/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? idinsumo)
+    public async Task<IActionResult> DeleteConfirmed(int id) // <-- Cambiado a id
     {
-        var insumo = await _context.Insumos.FindAsync(idinsumo);
+        var insumo = await _context.Insumos.FindAsync(id);
         if (insumo != null)
         {
             _context.Insumos.Remove(insumo);
@@ -143,8 +132,8 @@ public class InsumosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    private bool InsumoExists(int? idinsumo)
+    private bool InsumoExists(int id)
     {
-        return _context.Insumos.Any(e => e.IdInsumo == idinsumo);
+        return _context.Insumos.Any(e => e.IdInsumo == id);
     }
 }

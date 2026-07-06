@@ -39,8 +39,7 @@ namespace SaborPrestigioMVC.Data
                 .HasForeignKey(rp => rp.IdInsumo);
 
             modelBuilder.Entity<DetallePedido>()
-    .Property(d => d.Subtotal)
-    .HasComputedColumnSql("[cantidad] * [precio_unitario]");
+                .HasKey(dp => new { dp.IdPedido, dp.IdPlatillo });
         }
     }
 }

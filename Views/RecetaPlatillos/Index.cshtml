@@ -3,29 +3,39 @@
 @{
     ViewData["Title"] = "Recetas de Platillos";
 }
+<link rel="stylesheet" href="~/css/dashboard.css" />
 
-<h1>Recetas de Platillos</h1>
+<div class="dashboard-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="titulo-estados text-warning fw-bold">📖 Fórmulas y Recetas de Platillos</h4>
+        <a asp-action="Create" class="btn btn-warning fw-bold shadow-sm">
+            + Registrar Receta
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Registrar Receta</a>
-</p>
-
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Platillo</th>
-            <th>Insumo</th>
-            <th>Cantidad Requerida</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Platillo?.NombrePlatillo</td>
-                <td>@item.Insumo?.NombreInsumo</td>
-                <td>@item.CantidadRequerida</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="table-responsive">
+        <table class="table table-hover table-dark table-striped align-middle border-secondary">
+            <thead class="table-black text-muted small text-uppercase">
+                <tr>
+                    <th>Platillo Destino</th>
+                    <th>Insumo Requerido</th>
+                    <th class="text-center" style="width: 250px;">Cantidad de Consumo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><strong class="text-warning">@item.Platillo?.NombrePlatillo</strong></td>
+                        <td><span class="text-white">@item.Insumo?.NombreInsumo</span></td>
+                        <td class="text-center">
+                            <span class="badge bg-dark border border-secondary text-info px-4 py-2 font-mono fs-6">
+                                @item.CantidadRequerida.ToString("0.000") @item.Insumo?.UnidadMedida
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

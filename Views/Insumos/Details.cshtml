@@ -1,59 +1,59 @@
 @model SaborPrestigioMVC.Models.Insumo
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Ficha del Insumo";
 }
 
-<h1>Details</h1>
+<div class="container mt-4 text-white" style="max-width: 650px;">
+    <div class="card bg-dark border-secondary shadow">
+        <div class="card-header bg-black border-secondary py-3">
+            <h4 class="text-warning mb-0"><i class="fas fa-cubes"></i> Ficha de Auditoría de Materia Prima</h4>
+        </div>
+        <div class="card-body p-4">
+            <div class="text-center mb-4">
+                <h2 class="text-white mb-1">@Model.NombreInsumo</h2>
+                <span class="badge bg-warning text-black font-weight-bold px-3 py-1 text-uppercase">Medido en: @Model.UnidadMedida</span>
+            </div>
 
-<div>
-    <h4>Insumo</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NombreInsumo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NombreInsumo)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UnidadMedida)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UnidadMedida)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StockActual)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StockActual)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StockMinimo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StockMinimo)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PrecioCostoPromedio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PrecioCostoPromedio)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RecetasPlatillo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RecetasPlatillo)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdInsumo">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+            <div class="row g-3 text-center mb-4">
+                <div class="col-6">
+                    <div class="p-3 bg-black rounded border border-secondary">
+                        <small class="text-muted d-block text-uppercase small">Stock en Almacén</small>
+                        <span class="fs-4 fw-bold text-white">@Model.StockActual.ToString("0.000")</span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="p-3 bg-black rounded border border-secondary">
+                        <small class="text-muted d-block text-uppercase small">Costo Unitario Promedio</small>
+                        <span class="fs-4 fw-bold text-success">S/ @Model.PrecioCostoPromedio.ToString("0.00")</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-black rounded border border-secondary mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong class="text-warning d-block">Stock Mínimo Configurado:</strong>
+                        <small class="text-muted">Umbral disparador de reabastecimiento urgente.</small>
+                    </div>
+                    <span class="fs-4 fw-bold text-danger">@Model.StockMinimo.ToString("0.000")</span>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                @if (Model.StockActual <= Model.StockMinimo)
+                {
+                    <span class="badge bg-danger px-4 py-2 text-uppercase fs-6 shadow-sm"><i class="fas fa-exclamation-circle"></i> Alerta: Stock Crítico / Abastecer</span>
+                }
+                else
+                {
+                    <span class="badge bg-success px-4 py-2 text-uppercase fs-6 shadow-sm"><i class="fas fa-check-circle"></i> Estado Inventario: Óptimo</span>
+                }
+            </div>
+        </div>
+        <div class="card-footer bg-black border-secondary text-end py-3">
+            <a asp-action="Edit" asp-route-id="@Model.IdInsumo" class="btn btn-warning fw-bold px-4">Editar Insumo</a>
+            <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Volver</a>
+        </div>
+    </div>
 </div>
