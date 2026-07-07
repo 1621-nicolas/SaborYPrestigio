@@ -12,7 +12,7 @@ namespace SaborPrestigioMVC.Models
         public int IdInsumo { get; set; }
 
         [Column("cantidad_requerida")]
-        public decimal CantidadRequerida { get; set; }
+        public int CantidadRequerida { get; set; }
 
         [ForeignKey("IdPlatillo")]
         public Platillo? Platillo { get; set; }

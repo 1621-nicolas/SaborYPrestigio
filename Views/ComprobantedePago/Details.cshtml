@@ -1,101 +1,64 @@
 @model SaborPrestigioMVC.Models.ComprobantePago
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalle del Comprobante";
 }
 
-<h1>Details</h1>
+<div class="container mt-4 text-white" style="max-width: 680px;">
+    <div class="card bg-dark border-secondary shadow">
+        <div class="card-header bg-black border-secondary py-3">
+            <h4 class="text-warning mb-0"><i class="fas fa-file-invoice-dollar me-2"></i>Auditoría de Comprobante Emitido</h4>
+        </div>
+        <div class="card-body p-4">
+            <div class="text-center mb-4">
+                <span class="badge bg-warning text-black px-3 py-1 text-uppercase fw-bold fs-6">
+                    @Model.TipoComprobante Electrónica
+                </span>
+                <h2 class="text-white mt-2 font-mono fw-bold text-success">@Model.Serie-@Model.Correlativo.ToString("D6")</h2>
+                <small class="text-muted">Fecha de Emisión: @Model.FechaEmision.ToString("dd/MM/yyyy HH:mm:ss")</small>
+            </div>
 
-<div>
-    <h4>ComprobantePago</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdPedido)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdPedido)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TipoComprobante)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TipoComprobante)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Serie)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Serie)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Correlativo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Correlativo)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaEmision)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaEmision)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MetodoPago)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MetodoPago)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MontoSubtotal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MontoSubtotal)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MontoIgv)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MontoIgv)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MontoTotal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MontoTotal)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Pedido)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Pedido)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ClienteDocumento)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ClienteDocumento)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ClienteNombreORazonSocial)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ClienteNombreORazonSocial)
-        </dd>
-    </dl>
+            <div class="p-3 bg-black rounded border border-secondary mb-4">
+                <h6 class="text-warning border-bottom border-secondary pb-2 mb-3 small text-uppercase fw-bold">Información del Cliente</h6>
+                <div class="row g-2 small">
+                    <div class="col-sm-4 text-muted">Nombre / Razón Social:</div>
+                    <div class="col-sm-8 text-white fw-bold">@Model.ClienteNombreORazonSocial</div>
+
+                    <div class="col-sm-4 text-muted">Documento (DNI/RUC):</div>
+                    <div class="col-sm-8 text-white font-mono">@Model.ClienteDocumento</div>
+
+                    <div class="col-sm-4 text-muted">Código de Pedido:</div>
+                    <div class="col-sm-8 text-info fw-bold">#@Model.IdPedido</div>
+
+                    <div class="col-sm-4 text-muted">Método de Pago:</div>
+                    <div class="col-sm-8 text-white">@Model.MetodoPago</div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-black rounded border border-warning font-mono">
+                <h6 class="text-warning border-bottom border-secondary pb-2 mb-3 small text-uppercase fw-bold">Resumen Contable (SUNAT)</h6>
+                <div class="d-flex justify-content-between mb-1 text-muted small">
+                    <span>OPERACIÓN GRAVADA:</span>
+                    <span>S/ @Model.MontoSubtotal.ToString("0.00")</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2 text-muted small">
+                    <span>IGV (18.00%):</span>
+                    <span>S/ @Model.MontoIgv.ToString("0.00")</span>
+                </div>
+                <div class="d-flex justify-content-between pt-2 border-top border-secondary text-warning fw-bold fs-4">
+                    <span>TOTAL LIQUIDADO:</span>
+                    <span>S/ @Model.MontoTotal.ToString("0.00")</span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-black border-secondary text-end py-3">
+            <a asp-action="Index" class="btn btn-secondary px-4">Volver al Historial</a>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdComprobante">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<style>
+    .font-mono {
+        font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+</style>

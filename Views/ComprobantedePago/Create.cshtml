@@ -4,62 +4,215 @@
     ViewData["Title"] = "Emitir Comprobante";
 }
 
-<h1>Emitir Comprobante</h1>
+<div class="container-fluid px-4 text-white">
+    <h2 class="mt-3">Facturación Electrónica</h2>
+    <h4 class="text-muted small">Módulo de Caja, Despacho y Control del IGV</h4>
+    <hr class="border-secondary" />
 
-<hr />
+    <div class="row">
+        <div class="col-xl-5 col-md-6 mb-4">
+            <div class="card bg-dark border-secondary shadow-sm">
+                <div class="card-header border-secondary bg-black text-warning fw-bold">
+                    <i class="fas fa-cash-register me-1"></i> Datos de Venta
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" id="formComprobante">
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
 
-<div class="row">
-    <div class="col-md-5">
-        <form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group mb-3">
+                            <label class="form-label text-warning fw-bold">Seleccione Pedido Atendido</label>
+                            <select asp-for="IdPedido" id="selectPedido" class="form-select bg-black text-warning border-secondary" required>
+                                <option value="">-- Elija Comanda Pendiente --</option>
+                                @if (ViewBag.PedidosLista != null)
+                                {
+                                    foreach (var p in ViewBag.PedidosLista)
+                                    {
+                                        <option value="@p.IdPedido" data-total="@p.MontoTotal" data-doc="@p.Documento" data-nombre="@p.NombreCompleto">@p.TextoMostrado</option>
+                                    }
+                                }
+                            </select>
+                        </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="IdPedido">Pedido</label>
-                <select asp-for="IdPedido" asp-items="ViewBag.Pedidos" class="form-control">
-                    <option value="">Seleccione Pedido</option>
-                </select>
-                <span asp-validation-for="IdPedido" class="text-danger"></span>
+                        <div class="row">
+                            <div class="col-md-6 form-group mb-3">
+                                <label class="form-label text-warning fw-bold">Tipo</label>
+                                <select asp-for="TipoComprobante" id="selectTipo" class="form-select bg-black text-warning border-secondary">
+                                    <option value="Boleta">Boleta de Venta</option>
+                                    <option value="Factura">Factura</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 form-group mb-3">
+                                <label class="form-label text-warning fw-bold">Método de Pago</label>
+                                <select asp-for="MetodoPago" class="form-select bg-black text-warning border-secondary">
+                                    <option value="Efectivo">Efectivo</option>
+                                    <option value="Tarjeta Crédito/Débito">Tarjeta Crédito/Débito</option>
+                                    <option value="Yape/Plin">Yape/Plin</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="seccionFactura" style="display: none;" class="p-3 bg-black rounded border border-warning my-3">
+                            <h6 class="text-warning mb-3 small text-uppercase fw-bold">
+                                <i class="fas fa-building me-1"></i> Datos de la Empresa (Facturación)
+                            </h6>
+
+                            <div class="form-group mb-2">
+                                <label class="form-label small text-muted">RUC de la Empresa (11 dígitos)</label>
+                                <input type="text" id="txtRuc" name="ClienteDocumento" class="form-control bg-dark text-white border-secondary"
+                                       maxlength="11" minlength="11" pattern="[0-9]{11}" placeholder="Ingrese el RUC de 11 dígitos" />
+                            </div>
+
+                            <div class="form-group mb-1">
+                                <label class="form-label small text-muted">Razón Social</label>
+                                <input type="text" id="txtRazonSocial" name="ClienteNombreORazonSocial" class="form-control bg-dark text-white border-secondary"
+                                       placeholder="Ej: Inversiones Trujillo S.A.C." />
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="Serie" id="hdnSerie" value="B001" />
+                        <input type="hidden" asp-for="Correlativo" value="1" />
+
+                        <div class="pt-3 border-top border-secondary mt-4">
+                            <button type="submit" class="btn btn-warning fw-bold px-4 shadow">Emitir e Imprimir</button>
+                            <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Volver</a>
+                        </div>
+                    </form>
+                </div>
             </div>
+        </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="TipoComprobante">Tipo de Comprobante</label>
-                <select asp-for="TipoComprobante" class="form-control">
-                    <option value="Boleta">Boleta</option>
-                    <option value="Factura">Factura</option>
-                </select>
-                <span asp-validation-for="TipoComprobante" class="text-danger"></span>
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card bg-black border-warning shadow-sm h-100">
+                <div class="card-header border-warning bg-dark text-warning fw-bold text-center text-uppercase tracking-wider">
+                    Vista Previa Ticket SUNAT
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between p-4">
+                    <div>
+                        <div class="text-center mb-3">
+                            <h5 class="mb-0 text-white fw-bold">SABOR Y PRESTIGIO</h5>
+                            <small class="text-muted">Trujillo, Perú</small>
+                        </div>
+
+                        <div class="border-top border-bottom border-secondary py-2 my-3 small text-muted">
+                            <div class="d-flex justify-content-between"><span>Serie-Número:</span><strong class="text-white" id="lblTicketSerie">B001-PROV</strong></div>
+                            <div class="d-flex justify-content-between"><span>Cliente:</span><strong class="text-white text-end" id="lblTicketCliente">-</strong></div>
+                            <div class="d-flex justify-content-between"><span>RUC/DNI:</span><strong class="text-white" id="lblTicketDoc">-</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-dark p-3 rounded border border-secondary font-mono">
+                        <div class="d-flex justify-content-between mb-1 small text-muted">
+                            <span>OP. GRAVADA:</span>
+                            <span id="lblSubtotal">S/ 0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 small text-muted">
+                            <span>IGV (18%):</span>
+                            <span id="lblIgv">S/ 0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between pt-2 border-top border-secondary text-warning fw-bold fs-4">
+                            <span>TOTAL:</span>
+                            <span id="lblTotal">S/ 0.00</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="Serie">Serie</label>
-                <input asp-for="Serie" class="form-control" placeholder="B001 o F001" />
-                <span asp-validation-for="Serie" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="Correlativo">Correlativo</label>
-                <input asp-for="Correlativo" class="form-control" />
-                <span asp-validation-for="Correlativo" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="MetodoPago">Método de Pago</label>
-                <select asp-for="MetodoPago" class="form-control">
-                    <option value="Efectivo">Efectivo</option>
-                    <option value="Tarjeta Crédito/Débito">Tarjeta Crédito/Débito</option>
-                    <option value="Yape/Plin">Yape/Plin</option>
-                </select>
-                <span asp-validation-for="MetodoPago" class="text-danger"></span>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Emitir Comprobante</button>
-            <a asp-action="Index" class="btn btn-secondary">Volver</a>
-        </form>
+        </div>
     </div>
 </div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+<style>
+    select.form-select option {
+        background-color: #000000 !important;
+        color: #ffc107 !important;
     }
+
+    .font-mono {
+        font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        const selectPedido = document.getElementById("selectPedido");
+        const selectTipo = document.getElementById("selectTipo");
+        const seccionFactura = document.getElementById("seccionFactura");
+        const txtRuc = document.getElementById("txtRuc");
+        const txtRazonSocial = document.getElementById("txtRazonSocial");
+
+        function recalcularTicket() {
+            const opcion = selectPedido.options[selectPedido.selectedIndex];
+            const tipo = selectTipo.value;
+            
+            if (tipo === "Factura") {
+                seccionFactura.style.display = "block";
+                // Hacer los campos obligatorios solo si es factura
+                txtRuc.required = true;
+                txtRazonSocial.required = true;
+            } else {
+                seccionFactura.style.display = "none";
+                txtRuc.required = false;
+                txtRazonSocial.required = false;
+                txtRuc.value = "";
+                txtRazonSocial.value = "";
+            }
+            
+            if (!selectPedido.value) {
+                limpiarTicket();
+                return;
+            }
+
+            const total = parseFloat(opcion.getAttribute("data-total"));
+            const doc = opcion.getAttribute("data-doc");
+            const nombre = opcion.getAttribute("data-nombre");
+
+            // 🔍 VALIDACIÓN: Si es Factura y el documento del cliente NO tiene 11 dígitos (es DNI), no lo cargamos
+            if (tipo === "Factura") {
+                if (doc && doc.length === 11) {
+                    txtRuc.value = doc;
+                    txtRazonSocial.value = nombre;
+                } else {
+                    // Es un DNI, dejamos vacío para que el cajero digite el RUC corporativo
+                    txtRuc.value = "";
+                    txtRazonSocial.value = "";
+                }
+            }
+
+            // Cálculos contables
+            const subtotal = total / 1.18;
+            const igv = total - subtotal;
+
+            document.getElementById("lblSubtotal").innerText = `S/ ${subtotal.toFixed(2)}`;
+            document.getElementById("lblIgv").innerText = `S/ ${igv.toFixed(2)}`;
+            document.getElementById("lblTotal").innerText = `S/ ${total.toFixed(2)}`;
+            
+            actualizarVisorTicket(tipo, txtRuc.value || doc, txtRazonSocial.value || nombre);
+        }
+
+        function limpiarTicket() {
+            document.getElementById("lblSubtotal").innerText = "S/ 0.00";
+            document.getElementById("lblIgv").innerText = "S/ 0.00";
+            document.getElementById("lblTotal").innerText = "S/ 0.00";
+            document.getElementById("lblTicketCliente").innerText = "-";
+            document.getElementById("lblTicketDoc").innerText = "-";
+        }
+
+        function actualizarVisorTicket(tipo, documento, cliente) {
+            const serie = tipo === "Boleta" ? "B001" : "F001";
+            document.getElementById("lblTicketSerie").innerText = `${serie}-AUTO`;
+            document.getElementById("hdnSerie").value = serie;
+            document.getElementById("lblTicketCliente").innerText = cliente || "-";
+            document.getElementById("lblTicketDoc").innerText = documento || "-";
+        }
+
+        // 🔥 Eventos para actualizar la vista previa en tiempo real mientras el cajero escribe el RUC/Razón Social
+        txtRuc.addEventListener("input", function() {
+            document.getElementById("lblTicketDoc").innerText = txtRuc.value || "-";
+        });
+        txtRazonSocial.addEventListener("input", function() {
+            document.getElementById("lblTicketCliente").innerText = txtRazonSocial.value || "-";
+        });
+
+        selectPedido.addEventListener("change", recalcularTicket);
+        selectTipo.addEventListener("change", recalcularTicket);
+    </script>
 }

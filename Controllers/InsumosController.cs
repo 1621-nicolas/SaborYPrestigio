@@ -15,11 +15,13 @@ public class InsumosController : Controller
     // GET: INSUMOS
     public async Task<IActionResult> Index()
     {
-        return View(await _context.Insumos.ToListAsync());
+        // Forzamos la consulta limpia de enteros desde la persistencia
+        var listaInsumos = await _context.Insumos.AsNoTracking().ToListAsync();
+        return View(listaInsumos);
     }
 
     // GET: INSUMOS/Details/5
-    public async Task<IActionResult> Details(int? id) // <-- Cambiado a id
+    public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
         {
@@ -28,6 +30,7 @@ public class InsumosController : Controller
 
         var insumo = await _context.Insumos
             .FirstOrDefaultAsync(m => m.IdInsumo == id);
+
         if (insumo == null)
         {
             return NotFound();
@@ -57,7 +60,7 @@ public class InsumosController : Controller
     }
 
     // GET: INSUMOS/Edit/5
-    public async Task<IActionResult> Edit(int? id) // <-- Cambiado a id
+    public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
         {
@@ -100,7 +103,7 @@ public class InsumosController : Controller
     }
 
     // GET: INSUMOS/Delete/5
-    public async Task<IActionResult> Delete(int? id) // <-- Cambiado a id
+    public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
         {
@@ -109,6 +112,7 @@ public class InsumosController : Controller
 
         var insumo = await _context.Insumos
             .FirstOrDefaultAsync(m => m.IdInsumo == id);
+
         if (insumo == null)
         {
             return NotFound();
@@ -120,7 +124,7 @@ public class InsumosController : Controller
     // POST: INSUMOS/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id) // <-- Cambiado a id
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var insumo = await _context.Insumos.FindAsync(id);
         if (insumo != null)

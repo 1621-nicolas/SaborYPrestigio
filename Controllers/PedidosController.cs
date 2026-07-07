@@ -96,22 +96,21 @@ public class PedidosController : Controller
 
                     // 1. Buscamos todos los insumos que componen la receta de este platillo
                     var ingredientesReceta = await _context.RecetasPlatillo
-                        .Where(r => r.IdPlatillo == detalle.IdPlatillo)
-                        .ToListAsync();
+                    .Where(r => r.IdPlatillo == detalle.IdPlatillo)
+                    .ToListAsync();
 
-                    // 2. Por cada ingrediente de la fórmula, multiplicamos y restamos al stock
+                    // 2. Por cada ingrediente de la fórmula (que ahora son enteros), restamos al stock
                     foreach (var ingrediente in ingredientesReceta)
                     {
                         var insumoAlmacen = await _context.Insumos.FindAsync(ingrediente.IdInsumo);
                         if (insumoAlmacen != null)
                         {
-                            // Cantidad total a descontar = (Porción de la receta) * (Cantidad de platos pedidos)
-                            decimal cantidadADescontar = ingrediente.CantidadRequerida * detalle.Cantidad;
+                            // Multiplicación de enteros puros: (Porciones de receta) x (Cantidad de platos pedidos)
+                            int cantidadADescontar = ingrediente.CantidadRequerida * detalle.Cantidad;
 
-                            // Restamos del stock actual
+                            // Restamos directamente del stock actual entero
                             insumoAlmacen.StockActual -= cantidadADescontar;
 
-                            // Entity Framework marcará este insumo para actualizarse automáticamente
                             _context.Update(insumoAlmacen);
                         }
                     }

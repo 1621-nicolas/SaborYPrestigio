@@ -3,22 +3,15 @@
 @{
     ViewData["Title"] = "Dashboard";
 }
-
 <link rel="stylesheet" href="~/css/dashboard.css" />
 
 <div class="dashboard-layout">
 
     <aside class="sidebar">
         <div class="logo">
-
-            <img src="~/images/logo.png"
-                 alt="Logo"
-                 class="logo-img" />
-
+            <img src="~/images/logo.png" alt="Logo" class="logo-img" />
             <div>Sabor y Prestigio</div>
-
             <small>RESTAURANTE</small>
-
         </div>
 
         <a class="active" asp-controller="Home" asp-action="Index">🏠 Dashboard</a>
@@ -29,177 +22,182 @@
         <a asp-controller="Platillos" asp-action="Index">🍴 Platillos</a>
         <a asp-controller="Insumos" asp-action="Index">📦 Inventario</a>
         <a asp-controller="ComprobantedePago" asp-action="Index">🧾 Comprobantes</a>
-        <a asp-controller="RecetaPlatillos" asp-action="Index">📊 Reportes</a>
+        <a asp-controller="RecetaPlatillos" asp-action="Index">🍳 Recetas</a>
     </aside>
 
     <main class="main-dashboard">
-        <div class="hero-dashboard">
 
+        <div class="d-flex justify-content-between align-items-center mb-4 text-white">
             <div>
-                <h1>Sabor y Prestigio</h1>
-
-                <p>
-                    Administración Integral del Restaurante
-                </p>
-
-                <span class="hero-date">
-                    📅 @DateTime.Now.ToString("dd/MM/yyyy")
-                </span>
-            </div>
-
-        </div>
-   
-
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2>Dashboard Administrador / Gerente</h2>
+                <h2 class="fw-bold text-warning mb-1">Dashboard Administrador / Gerente</h2>
                 <span>Bienvenido, <strong class="text-danger">Administrador</strong></span>
             </div>
-
             <div>
-                <span class="badge bg-light text-dark p-2">
+                <span class="badge bg-dark border border-secondary p-2 fs-6 font-mono text-warning">
                     📅 @DateTime.Now.ToString("dd/MM/yyyy")
                 </span>
             </div>
         </div>
 
-        <div class="kpi-card">
-            <div class="kpi-icon">💰</div>
-            <h6>Ventas Totales</h6>
-            <h2>S/ 0.00</h2>
+        <div class="kpi-grid-container mb-4">
+
+            <div class="kpi-card-custom text-white bg-dark border border-secondary p-3 rounded shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="small text-uppercase text-muted fw-bold">Ventas Totales</span>
+                    <span class="fs-4">💰</span>
+                </div>
+                <h3 class="text-warning fw-bold mb-0">S/ @Model.VentasTotales.ToString("N2")</h3>
+            </div>
+
+            <div class="kpi-card-custom text-white bg-dark border border-secondary p-3 rounded shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="small text-uppercase text-muted fw-bold">Pedidos del Día</span>
+                    <span class="fs-4">🛒</span>
+                </div>
+                <h3 class="text-white fw-bold mb-0">@Model.TotalPedidos</h3>
+            </div>
+
+            <div class="kpi-card-custom text-white bg-dark border border-secondary p-3 rounded shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="small text-uppercase text-muted fw-bold">Clientes Registrados</span>
+                    <span class="fs-4">👥</span>
+                </div>
+                <h3 class="text-white fw-bold mb-0">@Model.TotalClientes</h3>
+            </div>
+
+            <div class="kpi-card-custom text-white bg-dark border border-secondary p-3 rounded shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="small text-uppercase text-muted fw-bold">Stock Crítico</span>
+                    <span class="fs-4 text-danger">⚠️</span>
+                </div>
+                <h3 class="@(Model.StockCritico > 0 ? "text-danger" : "text-success") fw-bold mb-0">@Model.StockCritico</h3>
+            </div>
+
+            <div class="kpi-card-custom text-white bg-dark border border-secondary p-3 rounded shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="small text-uppercase text-muted fw-bold">Mesas Disponibles</span>
+                    <span class="fs-4">🍽</span>
+                </div>
+                <h3 class="text-info fw-bold mb-0">@Model.MesasDisponibles</h3>
+            </div>
+
+            <div class="kpi-card-custom text-white bg-dark border border-secondary p-3 rounded shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="small text-uppercase text-muted fw-bold">Comprobantes</span>
+                    <span class="fs-4">🧾</span>
+                </div>
+                <h3 class="text-white fw-bold mb-0">@Model.ComprobantesEmitidos</h3>
+            </div>
+
         </div>
 
-            <div class="kpi-card">
-                <h6>Pedidos del Día</h6>
-                <h2>@Model.TotalPedidos</h2>
-            </div>
+        <div class="dashboard-grid text-white">
 
-            <div class="kpi-card">
-                <h6>Clientes Registrados</h6>
-                <h2>@Model.TotalClientes</h2>
-            </div>
-
-            <div class="kpi-card">
-                <h6>Stock Crítico</h6>
-                <h2>@Model.StockCritico</h2>
-                <small class="text-danger">Ver detalles</small>
-            </div>
-
-            <div class="kpi-card">
-                <h6>Mesas Disponibles</h6>
-                <h2>@Model.MesasDisponibles</h2>
-            </div>
-
-            <div class="kpi-card">
-                <h6>Comprobantes</h6>
-                <h2>@Model.ComprobantesEmitidos</h2>
-            </div>
-        </div>
-
-        <div class="dashboard-grid">
-            <div class="dashboard-card equal-height">
-                <h5>Ventas por Día</h5>
-
+            <div class="dashboard-card bg-dark border border-secondary p-3 rounded shadow-sm equal-height">
+                <h5 class="text-warning mb-3 fw-bold border-bottom border-secondary pb-2">📈 Ventas por Día</h5>
                 @foreach (var venta in Model.VentasPorDia)
                 {
                     var ancho = Model.VentasTotales > 0 ? (venta.Total / Model.VentasTotales) * 100 : 0;
-
                     <div class="mb-3">
-                        <div class="d-flex justify-content-between">
-                            <span>@venta.Dia</span>
-                            <strong>S/ @venta.Total.ToString("0.00")</strong>
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>📅 @venta.Dia</span>
+                            <strong class="text-success">S/ @venta.Total.ToString("N2")</strong>
                         </div>
-
-                        <div class="progress">
-                            <div class="progress-bar bg-danger"
-                                 role="progressbar"
-                                 style="width:@ancho%">
-                            </div>
+                        <div class="progress bg-black border border-secondary" style="height: 10px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: @ancho%"></div>
                         </div>
                     </div>
                 }
             </div>
 
-            <div class="dashboard-card equal-height">
-                <h5>Pedidos por Estado</h5>
+            <div class="dashboard-card bg-dark border border-secondary p-3 rounded shadow-sm equal-height">
+                <h5 class="text-warning mb-3 fw-bold border-bottom border-secondary pb-2">📊 Distribución de Pedidos</h5>
 
                 <div class="mt-3">
-                    <p>🔵 En Espera</p>
-                    <p>🟠 En Preparación</p>
-                    <p>🟢 Listo</p>
-                    <p>🔴 Entregado</p>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>🔵 En Espera</span>
+                            <span class="badge bg-primary">@Model.UltimosPedidos.Count(p => p.EstadoPedido == "En Espera")</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>🟠 En Preparación / Cocina</span>
+                            <span class="badge bg-warning text-dark">@Model.UltimosPedidos.Count(p => p.EstadoPedido == "En Cocina" || p.EstadoPedido == "En Preparación")</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>🟢 Listos para Despacho</span>
+                            <span class="badge bg-success">@Model.UltimosPedidos.Count(p => p.EstadoPedido == "Listo")</span>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>🔴 Entregados / Facturados</span>
+                            <span class="badge bg-danger">@Model.UltimosPedidos.Count(p => p.EstadoPedido == "Entregado")</span>
+                        </div>
+                    </div>
                 </div>
 
-                <h2 class="text-center">@Model.TotalPedidos</h2>
-                <p class="text-center">Total de pedidos</p>
+                <div class="bg-black text-center p-3 rounded border border-secondary mt-4">
+                    <h2 class="text-warning fw-bold mb-0 font-mono">@Model.TotalPedidos</h2>
+                    <small class="text-muted text-uppercase tracking-wider">Flujo Total de Comandas</small>
+                </div>
             </div>
+
         </div>
 
-        <div class="dashboard-card mb-4">
-            <h5>Últimos Pedidos</h5>
+        <div class="dashboard-card bg-dark border border-secondary p-4 rounded shadow-sm mt-4 text-white">
+            <h5 class="text-warning mb-3 fw-bold border-bottom border-secondary pb-2">📋 Monitor de Últimas Comandas</h5>
 
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Pedido</th>
-                        <th>Cliente</th>
-                        <th>Estado</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach (var pedido in Model.UltimosPedidos)
-                    {
+            <div class="table-responsive">
+                <table class="table table-hover table-dark table-striped align-middle border-secondary mb-0">
+                    <thead class="table-black text-muted small text-uppercase">
                         <tr>
-                            <td>#@pedido.IdPedido</td>
-
-                            <td>
-                                @(pedido.Cliente != null
-                                    ? pedido.Cliente.Nombre + " " + pedido.Cliente.Apellido
-                                    : "Sin Cliente")
-                            </td>
-
-                            <td>
-                                <span class="badge bg-primary">@pedido.EstadoPedido</span>
-                            </td>
-
-                            <td>S/ @pedido.Total.ToString("0.00")</td>
+                            <th>ID Pedido</th>
+                            <th>Cliente Asignado</th>
+                            <th class="text-center">Estado Flujo</th>
+                            <th class="text-end">Monto Consolidado</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var pedido in Model.UltimosPedidos)
+                        {
+                            <tr>
+                                <td class="text-warning fw-bold">#@pedido.IdPedido</td>
+                                <td>@(pedido.Cliente != null ? ($"{pedido.Cliente.Nombre} {pedido.Cliente.Apellido}").Trim() : "Cliente General / Salón")</td>
+                                <td class="text-center">
+                                    <span class="badge @(pedido.EstadoPedido == "En Espera" ? "bg-primary" : pedido.EstadoPedido == "Listo" ? "bg-success" : "bg-warning text-dark") px-3 py-1">
+                                        @pedido.EstadoPedido
+                                    </span>
+                                </td>
+                                <td class="text-end font-mono text-success fw-bold">S/ @pedido.Total.ToString("N2")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
 
-            <div class="row g-3 mt-3">
-                <div class="col-md-3">
-                    <a asp-controller="Pedidos"
-                       asp-action="Create"
-                       class="btn btn-danger w-100 quick-btn">
-                        🛒 Nuevo Pedido
+            <div class="row g-3 mt-4 pt-3 border-top border-secondary">
+                <div class="col-xl-3 col-sm-6">
+                    <a asp-controller="Pedidos" asp-action="Create" class="btn btn-danger w-100 fw-bold py-2 shadow-sm">
+                        <i class="fas fa-shopping-basket me-1"></i> Nuevo Pedido
                     </a>
                 </div>
-
-                <div class="col-md-3">
-                    <a asp-controller="Reservas"
-                       asp-action="Create"
-                       class="btn btn-warning w-100 quick-btn">
-                        📅 Nueva Reserva
+                <div class="col-xl-3 col-sm-6">
+                    <a asp-controller="Reservas" asp-action="Create" class="btn btn-warning w-100 fw-bold py-2 text-dark shadow-sm">
+                        <i class="fas fa-calendar-plus me-1"></i> Nueva Reserva
                     </a>
                 </div>
-
-                <div class="col-md-3">
-                    <a asp-controller="Platillos"
-                       asp-action="Create"
-                       class="btn btn-dark w-100 quick-btn">
-                        🍽 Nuevo Platillo
+                <div class="col-xl-3 col-sm-6">
+                    <a asp-controller="Platillos" asp-action="Create" class="btn btn-outline-light w-100 fw-bold py-2 shadow-sm">
+                        <i class="fas fa-utensils me-1"></i> Nuevo Platillo
                     </a>
                 </div>
-
-                <div class="col-md-3">
-                    <a asp-controller="ComprobantedePago"
-                       asp-action="Create"
-                       class="btn btn-danger w-100 quick-btn">
-                        🧾 Emitir Comprobante
+                <div class="col-xl-3 col-sm-6">
+                    <a asp-controller="ComprobantedePago" asp-action="Create" class="btn btn-success w-100 fw-bold py-2 shadow-sm">
+                        <i class="fas fa-receipt me-1"></i> Emitir Comprobante
                     </a>
                 </div>
             </div>
@@ -207,3 +205,20 @@
 
     </main>
 </div>
+
+<style>
+    .kpi-grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        width: 100%;
+    }
+
+    .font-mono {
+        font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .table-black {
+        background-color: #0d0d0d !important;
+    }
+</style>

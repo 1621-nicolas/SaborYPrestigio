@@ -20,10 +20,10 @@ namespace SaborPrestigioMVC.Models
         public string UnidadMedida { get; set; }
 
         [Column("stock_actual")]
-        public decimal StockActual { get; set; }
+        public int StockActual { get; set; }
 
         [Column("stock_minimo")]
-        public decimal StockMinimo { get; set; }
+        public int StockMinimo { get; set; }
 
         [Column("precio_costo_promedio")]
         public decimal PrecioCostoPromedio { get; set; }

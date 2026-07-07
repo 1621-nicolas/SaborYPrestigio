@@ -40,15 +40,11 @@
 
                         <!-- Formateo a 3 decimales para Kg/Litros según tu diseño de BD -->
                         <td class="text-end text-info fw-bold">
-                            @item.StockActual.ToString("0.000")
+                            @item.StockActual
                         </td>
 
                         <td class="text-end text-muted">
-                            @item.StockMinimo.ToString("0.000")
-                        </td>
-
-                        <td class="text-end text-warning">
-                            S/ @item.PrecioCostoPromedio.ToString("0.00")
+                            @item.StockMinimo
                         </td>
 
                         <td class="text-center">
