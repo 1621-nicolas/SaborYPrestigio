@@ -1,10 +1,8 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SaborPrestigioMVC.Data;
 using SaborPrestigioMVC.Models;
-
 
 public class PlatillosController : Controller
 {
@@ -18,22 +16,22 @@ public class PlatillosController : Controller
     // GET: PLATILLOS
     public async Task<IActionResult> Index()
     {
-        var platillos = _context.Platillos
-            .Include(p => p.CategoriaPlato);
-
+        var platillos = _context.Platillos.Include(p => p.CategoriaPlato);
         return View(await platillos.ToListAsync());
     }
 
     // GET: PLATILLOS/Details/5
-    public async Task<IActionResult> Details(int? idplatillo)
+    public async Task<IActionResult> Details(int? id) // <-- Cambiado a id
     {
-        if (idplatillo == null)
+        if (id == null)
         {
             return NotFound();
         }
 
         var platillo = await _context.Platillos
-            .FirstOrDefaultAsync(m => m.IdPlatillo == idplatillo);
+            .Include(p => p.CategoriaPlato) // Agregamos el include para ver el texto de la categoría
+            .FirstOrDefaultAsync(m => m.IdPlatillo == id);
+
         if (platillo == null)
         {
             return NotFound();
@@ -45,21 +43,14 @@ public class PlatillosController : Controller
     // GET: PLATILLOS/Create
     public IActionResult Create()
     {
-        ViewBag.Categorias = new SelectList(
-            _context.CategoriasPlatos,
-            "IdCategoria",
-            "NombreCategoria"
-        );
-
+        ViewBag.Categorias = new SelectList(_context.CategoriasPlatos, "IdCategoria", "NombreCategoria");
         return View();
     }
 
     // POST: PLATILLOS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("IdPlatillo,NombrePlatillo,DescripcionGourmet,PrecioVenta,IdCategoria,TiempoEstimadoMin,Disponibilidad,CategoriaPlato,DetallePedidos,RecetasPlatillo")] Platillo platillo)
+    public async Task<IActionResult> Create([Bind("IdPlatillo,NombrePlatillo,DescripcionGourmet,PrecioVenta,IdCategoria,TiempoEstimadoMin,Disponibilidad")] Platillo platillo)
     {
         if (ModelState.IsValid)
         {
@@ -67,33 +58,36 @@ public class PlatillosController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        ViewBag.Categorias = new SelectList(_context.CategoriasPlatos, "IdCategoria", "NombreCategoria", platillo.IdCategoria);
         return View(platillo);
     }
 
     // GET: PLATILLOS/Edit/5
-    public async Task<IActionResult> Edit(int? idplatillo)
+    public async Task<IActionResult> Edit(int? id) // <-- Cambiado a id
     {
-        if (idplatillo == null)
+        if (id == null)
         {
             return NotFound();
         }
 
-        var platillo = await _context.Platillos.FindAsync(idplatillo);
+        var platillo = await _context.Platillos.FindAsync(id);
         if (platillo == null)
         {
             return NotFound();
         }
+
+        // Cargamos las categorías para el combobox
+        ViewBag.Categorias = new SelectList(_context.CategoriasPlatos, "IdCategoria", "NombreCategoria", platillo.IdCategoria);
         return View(platillo);
     }
 
     // POST: PLATILLOS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? idplatillo, [Bind("IdPlatillo,NombrePlatillo,DescripcionGourmet,PrecioVenta,IdCategoria,TiempoEstimadoMin,Disponibilidad")] Platillo platillo)
+    public async Task<IActionResult> Edit(int id, [Bind("IdPlatillo,NombrePlatillo,DescripcionGourmet,PrecioVenta,IdCategoria,TiempoEstimadoMin,Disponibilidad")] Platillo platillo)
     {
-        if (idplatillo != platillo.IdPlatillo)
+        if (id != platillo.IdPlatillo)
         {
             return NotFound();
         }
@@ -107,38 +101,28 @@ public class PlatillosController : Controller
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PlatilloExists(platillo.IdPlatillo))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!PlatilloExists(platillo.IdPlatillo)) return NotFound();
+                else throw;
             }
-
             return RedirectToAction(nameof(Index));
         }
 
-        ViewBag.Categorias = new SelectList(
-            _context.CategoriasPlatos,
-            "IdCategoria",
-            "NombreCategoria",
-            platillo.IdCategoria
-        );
-
+        ViewBag.Categorias = new SelectList(_context.CategoriasPlatos, "IdCategoria", "NombreCategoria", platillo.IdCategoria);
         return View(platillo);
     }
+
     // GET: PLATILLOS/Delete/5
-    public async Task<IActionResult> Delete(int? idplatillo)
+    public async Task<IActionResult> Delete(int? id) // <-- Cambiado a id
     {
-        if (idplatillo == null)
+        if (id == null)
         {
             return NotFound();
         }
 
         var platillo = await _context.Platillos
-            .FirstOrDefaultAsync(m => m.IdPlatillo == idplatillo);
+            .Include(p => p.CategoriaPlato)
+            .FirstOrDefaultAsync(m => m.IdPlatillo == id);
+
         if (platillo == null)
         {
             return NotFound();
@@ -150,9 +134,9 @@ public class PlatillosController : Controller
     // POST: PLATILLOS/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? idplatillo)
+    public async Task<IActionResult> DeleteConfirmed(int id) // <-- Cambiado a id
     {
-        var platillo = await _context.Platillos.FindAsync(idplatillo);
+        var platillo = await _context.Platillos.FindAsync(id);
         if (platillo != null)
         {
             _context.Platillos.Remove(platillo);
@@ -162,8 +146,8 @@ public class PlatillosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    private bool PlatilloExists(int? idplatillo)
+    private bool PlatilloExists(int id)
     {
-        return _context.Platillos.Any(e => e.IdPlatillo == idplatillo);
+        return _context.Platillos.Any(e => e.IdPlatillo == id);
     }
 }

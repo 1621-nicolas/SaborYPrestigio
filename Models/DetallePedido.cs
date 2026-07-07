@@ -6,10 +6,6 @@ namespace SaborPrestigioMVC.Models
     [Table("Detalle_Pedidos")]
     public class DetallePedido
     {
-        [Key]
-        [Column("id_detalle")]
-        public long IdDetalle { get; set; }
-
         [Column("id_pedido")]
         public long IdPedido { get; set; }
 
@@ -22,6 +18,8 @@ namespace SaborPrestigioMVC.Models
         [Column("precio_unitario")]
         public decimal PrecioUnitario { get; set; }
 
+        // AGREGA ESTA LÍNEA AQUÍ:
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Column("subtotal")]
         public decimal Subtotal { get; private set; }
 

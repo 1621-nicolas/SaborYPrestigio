@@ -1,59 +1,90 @@
 @model SaborPrestigioMVC.Models.Insumo
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Insumo";
 }
 
-<h1>Edit</h1>
+<div class="container mt-4 text-white">
+    <h2>Modificar Insumo</h2>
+    <h4 class="text-muted small">Actualización de Stocks e Inventario de Cocina</h4>
+    <hr class="border-secondary" />
 
-<h4>Insumo</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdInsumo" />
-            <div class="form-group">
-                <label asp-for="NombreInsumo" class="control-label"></label>
-                <input asp-for="NombreInsumo" class="form-control" />
-                <span asp-validation-for="NombreInsumo" class="text-danger"></span>
+    <div class="row">
+        <div class="col-xl-6 col-md-8 mb-4">
+            <div class="card bg-dark border-secondary shadow-sm">
+                <div class="card-header border-secondary bg-black text-warning fw-bold">
+                    <i class="fas fa-box-open me-1"></i> Parámetros de Almacén
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                        <input type="hidden" asp-for="IdInsumo" />
+
+                        <!-- Nombre -->
+                        <div class="form-group mb-3">
+                            <label asp-for="NombreInsumo" class="form-label fw-bold text-warning">Nombre del Insumo</label>
+                            <input asp-for="NombreInsumo" class="form-control bg-black text-white border-secondary" />
+                            <span asp-validation-for="NombreInsumo" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Unidad de Medida (Select Asegurado) -->
+                        <div class="form-group mb-3">
+                            <label asp-for="UnidadMedida" class="form-label fw-bold text-warning">Unidad de Medida</label>
+                            <select asp-for="UnidadMedida" class="form-select bg-black text-white border-secondary">
+                                <option value="Kg">Kilogramos (Kg)</option>
+                                <option value="Litros">Litros</option>
+                                <option value="Unidades">Unidades</option>
+                                <option value="Gramos">Gramos</option>
+                            </select>
+                            <span asp-validation-for="UnidadMedida" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <!-- Stock Actual -->
+                            <div class="col-md-6 form-group mb-3">
+                                <label asp-for="StockActual" class="form-label fw-bold text-warning">Stock Actual</label>
+                                <input asp-for="StockActual" type="number" step="0.001" class="form-control bg-black text-white border-secondary" />
+                                <span asp-validation-for="StockActual" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Stock Mínimo -->
+                            <div class="col-md-6 form-group mb-3">
+                                <label asp-for="StockMinimo" class="form-label fw-bold text-warning">Stock Mínimo (Alerta Crítica)</label>
+                                <input asp-for="StockMinimo" type="number" step="0.001" class="form-control bg-black text-white border-secondary" />
+                                <span asp-validation-for="StockMinimo" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Precio Costo -->
+                        <div class="form-group mb-4">
+                            <label asp-for="PrecioCostoPromedio" class="form-label fw-bold text-warning">Precio Costo Promedio</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary border-secondary text-white">S/</span>
+                                <input asp-for="PrecioCostoPromedio" type="number" step="0.01" class="form-control bg-black text-white border-secondary" />
+                            </div>
+                            <span asp-validation-for="PrecioCostoPromedio" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-group pt-2 border-top border-secondary">
+                            <button type="submit" class="btn btn-primary px-4 shadow">Guardar Cambios</button>
+                            <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Volver</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="UnidadMedida" class="control-label"></label>
-                <input asp-for="UnidadMedida" class="form-control" />
-                <span asp-validation-for="UnidadMedida" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StockActual" class="control-label"></label>
-                <input asp-for="StockActual" class="form-control" />
-                <span asp-validation-for="StockActual" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StockMinimo" class="control-label"></label>
-                <input asp-for="StockMinimo" class="form-control" />
-                <span asp-validation-for="StockMinimo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PrecioCostoPromedio" class="control-label"></label>
-                <input asp-for="PrecioCostoPromedio" class="form-control" />
-                <span asp-validation-for="PrecioCostoPromedio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RecetasPlatillo" class="control-label"></label>
-                <input asp-for="RecetasPlatillo" class="form-control" />
-                <span asp-validation-for="RecetasPlatillo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<style>
+    select.form-select option {
+        background-color: #000000 !important;
+        color: #ffc107 !important;
+    }
+</style>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

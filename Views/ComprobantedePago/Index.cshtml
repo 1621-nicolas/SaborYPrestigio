@@ -3,100 +3,79 @@
 @{
     ViewData["Title"] = "Comprobantes de Pago";
 }
-
 <link rel="stylesheet" href="~/css/dashboard.css" />
 
 <div class="dashboard-card">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-
-        <h4 class="titulo-estados">🧾 Comprobantes de Pago</h4>
-
-        <a asp-action="Create" class="btn btn-warning fw-bold">
+        <h4 class="titulo-estados text-warning fw-bold">🧾 Historial de Comprobantes de Pago</h4>
+        <a asp-action="Create" class="btn btn-warning fw-bold shadow-sm">
             + Emitir Comprobante
         </a>
-
     </div>
 
     <div class="table-responsive">
-
-        <table class="table table-hover table-dark table-striped align-middle">
-
-            <thead>
+        <table class="table table-hover table-dark table-striped align-middle border-secondary">
+            <thead class="table-black text-muted small text-uppercase">
                 <tr>
-                    <th>#</th>
+                    <th>N° Comp.</th>
                     <th>Pedido</th>
-                    <th>Cliente</th>
-                    <th>Documento</th>
-                    <th>Tipo</th>
-                    <th>Serie</th>
-                    <th>Correlativo</th>
-                    <th>Fecha</th>
-                    <th>Método</th>
-                    <th>Subtotal</th>
-                    <th>IGV</th>
-                    <th>Total</th>
-                    <th>Acciones</th>
+                    <th>Razón Social / Cliente</th>
+                    <th class="text-center">Doc. Identidad</th>
+                    <th class="text-center">Tipo</th>
+                    <th class="text-center">Serie-Número</th>
+                    <th class="text-center">Fecha Emisión</th>
+                    <th class="text-center">Método Pago</th>
+                    <th class="text-end">Subtotal</th>
+                    <th class="text-end">IGV (18%)</th>
+                    <th class="text-end">Monto Total</th>
+                    <th class="text-center" style="width: 150px;">Acciones</th>
                 </tr>
             </thead>
 
             <tbody>
-
                 @foreach (var item in Model)
                 {
                     <tr>
-
-                        <td><strong>@item.IdComprobante</strong></td>
-
-                        <td>#@item.IdPedido</td>
-
-                        <td>@item.ClienteNombreORazonSocial</td>
-
-                        <td>@item.ClienteDocumento</td>
-
-                        <td>
-                            <span class="badge bg-secondary">@item.TipoComprobante</span>
+                        <td><strong>#@item.IdComprobante</strong></td>
+                        <td class="text-warning fw-bold">#@item.IdPedido</td>
+                        <td class="text-white small">@item.ClienteNombreORazonSocial</td>
+                        <td class="text-center font-mono text-white small">@item.ClienteDocumento</td>
+                        <td class="text-center">
+                            <span class="badge @(item.TipoComprobante == "Boleta" ? "bg-info text-dark" : "bg-purple text-white") text-uppercase px-2">
+                                @item.TipoComprobante
+                            </span>
                         </td>
-
-                        <td>@item.Serie</td>
-
-                        <td>@item.Correlativo</td>
-
-                        <td>@item.FechaEmision.ToString("dd/MM/yyyy HH:mm")</td>
-
-                        <td>@item.MetodoPago</td>
-
-                        <td>S/ @item.MontoSubtotal.ToString("0.00")</td>
-
-                        <td>S/ @item.MontoIgv.ToString("0.00")</td>
-
-                        <td>
-                            <strong>S/ @item.MontoTotal.ToString("0.00")</strong>
+                        <td class="text-center fw-bold text-success font-mono">
+                            @item.Serie-@item.Correlativo.ToString("D6")
                         </td>
+                        <td class="text-center small text-white">@item.FechaEmision.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="text-center small">@item.MetodoPago</td>
+                        <td class="text-end font-mono text-white">S/ @item.MontoSubtotal.ToString("0.00")</td>
+                        <td class="text-end font-mono text-white">S/ @item.MontoIgv.ToString("0.00")</td>
+                        <td class="text-end font-mono text-warning fw-bold">S/ @item.MontoTotal.ToString("0.00")</td>
 
-                        <td>
-
-                            <a asp-action="Details"
-                               asp-route-idcomprobante="@item.IdComprobante"
-                               class="btn btn-sm btn-info text-white">
+                        <td class="text-center">
+                            <a asp-action="Details" asp-route-id="@item.IdComprobante" class="btn btn-sm btn-info text-white px-2">
                                 Ver
                             </a>
-
-                            <a asp-action="Delete"
-                               asp-route-idcomprobante="@item.IdComprobante"
-                               class="btn btn-sm btn-danger">
-                                Eliminar
+                            <a asp-action="Delete" asp-route-id="@item.IdComprobante" class="btn btn-sm btn-danger px-2">
+                                Anular
                             </a>
-
                         </td>
-
                     </tr>
                 }
-
             </tbody>
-
         </table>
-
     </div>
-
 </div>
+
+<style>
+    .bg-purple {
+        background-color: #6f42c1 !important;
+    }
+
+    .font-mono {
+        font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+</style>
