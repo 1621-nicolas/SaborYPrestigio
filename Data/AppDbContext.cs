@@ -22,6 +22,7 @@ namespace SaborPrestigioMVC.Data
         public DbSet<Insumo> Insumos { get; set; }
         public DbSet<RecetaPlatillo> RecetasPlatillo { get; set; }
         public DbSet<ComprobantePago> ComprobantesPago { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

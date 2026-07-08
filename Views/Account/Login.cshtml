@@ -1,0 +1,88 @@
+﻿@model SaborYPrestigio.Models.LoginViewModel
+
+@{
+    // Anulamos el Layout para que no salga la barra lateral de navegación aquí
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Sabor y Prestigio</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+            body {
+                background-color: #0a0a0a;
+                font-family: sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .login-card {
+                background-color: #141414;
+                border: 1px solid #ffc107;
+                max-width: 400px;
+                width: 100%;
+                border-radius: 8px;
+                padding: 2.5rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            }
+
+            .form-control:focus {
+                background-color: #000;
+                color: #fff;
+                border-color: #ffc107;
+                box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+            }
+    </style>
+</head>
+<body>
+    <div class="login-card text-white text-center">
+
+        <div class="mb-4">
+            <img src="~/images/logo.png" alt="Logo" style="width: 80px; margin-bottom: 10px;" onerror="this.style.display='none'" />
+            <h3 class="text-warning fw-bold mb-1">SABOR Y PRESTIGIO</h3>
+            <p class="text-muted small text-uppercase tracking-wider">Control de Accesos Integrado</p>
+        </div>
+
+        <form asp-action="Login" method="post" class="text-start">
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3 fw-bold text-center"></div>
+
+            <div class="mb-3">
+                <label asp-for="Usuario" class="form-label small text-warning fw-bold">Correo Electrónico o DNI</label>
+                <input asp-for="Usuario" class="form-control bg-black text-white border-secondary" placeholder="Ingrese sus credenciales" required autofocus />
+                <span asp-validation-for="Usuario" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Clave" class="form-label small text-warning fw-bold">Contraseña</label>
+                <input asp-for="Clave" type="password" class="form-control bg-black text-white border-secondary" placeholder="••••••••" required />
+                <span asp-validation-for="Clave" class="text-danger small"></span>
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100 fw-bold shadow-sm py-2">
+                Ingresar al Sistema
+            </button>
+
+            <div class="mt-3 text-center">
+                <span class="text-muted small">¿No tienes cuenta?</span>
+                <a asp-action="Register" class="text-warning text-decoration-none fw-bold small ms-1 hover-gold">
+                    Regístrate aquí
+                </a>
+            </div>
+
+            <div class="mt-3 border-top border-secondary pt-3 text-center">
+                <a asp-controller="ClientePortal" asp-action="Index" class="btn btn-outline-light btn-sm w-100 text-muted border-secondary">
+                    <i class="fas fa-utensils me-1"></i> Ver Menú como Invitado
+                </a>
+            </div>
+        </form>
+
+    </div>
+</body>
+</html>

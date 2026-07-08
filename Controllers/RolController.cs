@@ -1,9 +1,11 @@
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using SaborPrestigioMVC.Models;
 using SaborPrestigioMVC.Data;
 
+[Authorize]
 public class RolController : Controller
 {
     private readonly AppDbContext _context;

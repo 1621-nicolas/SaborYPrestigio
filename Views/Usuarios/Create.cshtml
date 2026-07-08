@@ -1,0 +1,57 @@
+﻿@model SaborPrestigioMVC.Models.Usuario
+
+@{
+    ViewData["Title"] = "Registrar Usuario";
+}
+
+<div class="container mt-4 text-white">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-dark border-secondary shadow-sm">
+                <div class="card-header border-secondary bg-black text-warning fw-bold">
+                    <i class="fas fa-user-plus me-1"></i> Registrar Nuevo Usuario
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Email" class="form-label text-warning fw-bold">Correo Electrónico</label>
+                            <input asp-for="Email" class="form-control bg-black text-white border-secondary" placeholder="ejemplo@sabor.com" required />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Password" class="form-label text-warning fw-bold">Contraseña</label>
+                            <input asp-for="Password" type="password" class="form-control bg-black text-white border-secondary" placeholder="Mínimo 6 caracteres" required />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Rol" class="form-label text-warning fw-bold">Asignar Rol de Acceso</label>
+                            <select asp-for="Rol" class="form-select bg-black text-warning border-secondary" required>
+                                <option value="">-- Seleccione un Rol --</option>
+                                <option value="Administrador">Administrador (Gerente)</option>
+                                <option value="Trabajador">Trabajador (Caja/Cocina/Mozo)</option>
+                                <option value="Cliente">Cliente (Portal Web)</option>
+                            </select>
+                            <span asp-validation-for="Rol" class="text-danger small"></span>
+                        </div>
+
+                        <div class="pt-3 border-top border-secondary text-end">
+                            <a asp-action="Index" class="btn btn-secondary px-4 me-2">Cancelar</a>
+                            <button type="submit" class="btn btn-warning fw-bold px-4 shadow-sm">Guardar Usuario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    select.form-select option {
+        background-color: #000000 !important;
+        color: #ffc107 !important;
+    }
+</style>

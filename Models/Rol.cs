@@ -12,9 +12,9 @@ namespace SaborPrestigioMVC.Models;
 
         [Required]
         [Column("nombre_rol")]
-        public string NombreRol { get; set; }
+        public string NombreRol { get; set; } = null!;
 
-        [Column("descripcion")]
+    [Column("descripcion")]
         public string? Descripcion { get; set; }
 
         public ICollection<Empleado>? Empleados { get; set; }

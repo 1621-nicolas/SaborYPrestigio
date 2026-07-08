@@ -14,11 +14,11 @@ namespace SaborPrestigioMVC.Models
         [RegularExpression(@"^\d{8}$",
             ErrorMessage = "El DNI debe tener exactamente 8 dígitos")]
         [Column("dni_ruc")]
-        public string DniRuc { get; set; }
+        public string DniRuc { get; set; } = null!;
 
         [Required(ErrorMessage = "Ingrese nombre")]
         [Column("nombre")]
-        public string Nombre { get; set; }
+        public string Nombre { get; set; } = null!;
 
         [Required(ErrorMessage = "Ingrese apellido")]
         [Column("apellido")]
@@ -33,7 +33,10 @@ namespace SaborPrestigioMVC.Models
         [Required(ErrorMessage = "Ingrese correo")]
         [EmailAddress(ErrorMessage = "Ingrese un correo válido")]
         [Column("email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
+
+        [Column("clave")]
+        public string Clave { get; set; } = null!;
 
         [Column("fecha_registro")]
         public DateTime FechaRegistro { get; set; } = DateTime.Now;

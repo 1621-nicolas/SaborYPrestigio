@@ -23,6 +23,13 @@
         <a asp-controller="Insumos" asp-action="Index">📦 Inventario</a>
         <a asp-controller="ComprobantedePago" asp-action="Index">🧾 Comprobantes</a>
         <a asp-controller="RecetaPlatillos" asp-action="Index">🍳 Recetas</a>
+        <div class="mt-auto pt-4 pb-3 px-3">
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="btn btn-outline-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2 border-secondary text-danger">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </form>
+        </div>
     </aside>
 
     <main class="main-dashboard">
@@ -30,7 +37,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4 text-white">
             <div>
                 <h2 class="fw-bold text-warning mb-1">Dashboard Administrador / Gerente</h2>
-                <span>Bienvenido, <strong class="text-danger">Administrador</strong></span>
+                <span>Bienvenido, <strong class="text-danger">@User.Identity?.Name</strong></span>
             </div>
             <div>
                 <span class="badge bg-dark border border-secondary p-2 fs-6 font-mono text-warning">
