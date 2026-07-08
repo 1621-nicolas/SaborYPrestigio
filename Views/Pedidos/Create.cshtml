@@ -15,49 +15,63 @@
         <div asp-validation-summary="ModelOnly" class="alert alert-danger bg-danger text-white border-0 d-none" id="alertError"></div>
 
         <div class="row">
-            <!-- BLOQUE IZQUIERDO: MAESTRO DEL PEDIDO -->
             <div class="col-xl-4 col-md-5 mb-4">
                 <div class="card bg-dark border-secondary h-100 shadow-sm">
                     <div class="card-header border-secondary bg-black text-warning fw-bold">
                         <i class="fas fa-utensils me-1"></i> Información General
                     </div>
                     <div class="card-body">
-                        <div class="form-group mb-3">
-                            <label asp-for="IdCliente" class="form-label fw-bold text-muted">Cliente</label>
-                            <select asp-for="IdCliente" asp-items="ViewBag.Clientes" class="form-select bg-black text-white border-secondary">
-                                <option value="">-- Seleccione Cliente (Opcional) --</option>
-                            </select>
-                        </div>
+                        @if (ViewBag.EsClienteWeb == true)
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label fw-bold text-muted">Cliente</label>
+                                <input type="text" class="form-control bg-dark text-warning border-secondary fw-bold" value="@ViewBag.NombreClienteLogueado" readonly />
+                                <input type="hidden" asp-for="IdCliente" value="@ViewBag.IdClienteLogueado" />
+                                <input type="hidden" asp-for="TipoPedido" value="Web - Recojo en local" />
+                            </div>
 
-                        <div class="form-group mb-3">
-                            <label asp-for="IdEmpleado" class="form-label fw-bold text-muted">Empleado (Mozo)</label>
-                            <select asp-for="IdEmpleado" asp-items="ViewBag.Empleados" class="form-select bg-black text-white border-secondary">
-                                <option value="">-- Seleccione Empleado --</option>
-                            </select>
-                            <span asp-validation-for="IdEmpleado" class="text-danger small"></span>
-                        </div>
+                            <div class="alert alert-warning bg-black border-warning text-warning small mt-4">
+                                <i class="fas fa-info-circle me-1"></i> Este pedido ingresará a nuestra cocina como <strong>Recojo en Local</strong>.
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group mb-3">
+                                <label asp-for="IdCliente" class="form-label fw-bold text-muted">Cliente</label>
+                                <select asp-for="IdCliente" asp-items="ViewBag.Clientes" class="form-select bg-black text-white border-secondary">
+                                    <option value="">-- Público General / Sin Registrar --</option>
+                                </select>
+                            </div>
 
-                        <div class="form-group mb-3">
-                            <label asp-for="IdMesa" class="form-label fw-bold text-muted">Mesa Asignada</label>
-                            <select asp-for="IdMesa" asp-items="ViewBag.Mesas" class="form-select bg-black text-white border-secondary">
-                                <option value="">-- Seleccione Mesa --</option>
-                            </select>
-                        </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="IdEmpleado" class="form-label fw-bold text-muted">Empleado (Mozo)</label>
+                                <select asp-for="IdEmpleado" asp-items="ViewBag.Empleados" class="form-select bg-black text-white border-secondary">
+                                    <option value="">-- Seleccione Empleado --</option>
+                                </select>
+                                <span asp-validation-for="IdEmpleado" class="text-danger small"></span>
+                            </div>
 
-                        <div class="form-group mb-3">
-                            <label asp-for="TipoPedido" class="form-label fw-bold text-muted">Tipo de Pedido</label>
-                            <select asp-for="TipoPedido" class="form-select bg-black text-white border-secondary">
-                                <option value="Mesa">Mesa</option>
-                                <option value="Web - Recojo en local">Web - Recojo en local</option>
-                                <option value="Web - Preorden">Web - Preorden</option>
-                            </select>
-                            <span asp-validation-for="TipoPedido" class="text-danger small"></span>
-                        </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="IdMesa" class="form-label fw-bold text-muted">Mesa Asignada</label>
+                                <select asp-for="IdMesa" asp-items="ViewBag.Mesas" class="form-select bg-black text-white border-secondary">
+                                    <option value="">-- Seleccione Mesa --</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="TipoPedido" class="form-label fw-bold text-muted">Tipo de Pedido</label>
+                                <select asp-for="TipoPedido" class="form-select bg-black text-white border-secondary">
+                                    <option value="Mesa">Consumo en Mesa</option>
+                                    <option value="Para Llevar">Para Llevar (Takeout)</option>
+                                    <option value="Delivery">Delivery / Reparto</option>
+                                </select>
+                                <span asp-validation-for="TipoPedido" class="text-danger small"></span>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
 
-            <!-- BLOQUE DERECHO: DINÁMICA DE PLATILLOS (DETALLE) -->
             <div class="col-xl-8 col-md-7 mb-4">
                 <div class="card bg-dark border-secondary shadow-sm">
                     <div class="card-header border-secondary bg-black text-warning fw-bold">
@@ -73,7 +87,6 @@
                                     {
                                         foreach (var p in ViewBag.Platillos)
                                         {
-                                            // Extraemos el ID y parseamos el precio del texto para JS
                                             var id = p.GetType().GetProperty("IdPlatillo").GetValue(p, null);
                                             var nombrePrecio = p.GetType().GetProperty("NombrePrecio").GetValue(p, null).ToString();
                                             var precio = nombrePrecio.Split("S/ ")[1].Replace(")", "");
@@ -96,7 +109,6 @@
                             </div>
                         </div>
 
-                        <!-- TABLA QUE VA SUMANDO -->
                         <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
                             <table class="table table-dark table-hover border-secondary alignment-middle" id="tablaDetalles">
                                 <thead class="table-black text-muted small text-uppercase">
@@ -110,25 +122,37 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Se inyecta dinámicamente -->
                                 </tbody>
                             </table>
                         </div>
 
-                        <!-- SECCIÓN CONSOLIDADA DEL TOTAL -->
                         <div class="d-flex justify-content-end align-items-center mt-3 p-3 bg-black rounded border border-secondary">
                             <span class="fs-5 text-muted me-3">Monto Consolidado:</span>
-                            <span class="fs-3 text-warning fw-bold" id="lblTotal">S/ 0.00</span>
+                            <span class="fs-3 text-warning fw-bold" id="lblTotalConsolidado">S/ 0.00</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ACCIONES FINALES -->
-        <div class="mt-2 mb-5">
-            <button type="submit" class="btn btn-primary px-4 shadow"><i class="fas fa-save"></i> Registrar Pedido</button>
-            <a asp-action="Index" class="btn btn-secondary px-4 ms-2"><i class="fas fa-arrow-left"></i> Volver</a>
+        <!-- 🔥 ACCIONES FINALES CORREGIDAS -->
+        <div class="mt-4 mb-5 d-flex gap-2">
+            <button type="submit" class="btn btn-primary px-4 shadow">
+                <i class="fas fa-save"></i> Registrar Pedido
+            </button>
+
+            @if (ViewBag.EsClienteWeb == true)
+            {
+                <a asp-controller="ClientePortal" asp-action="Index" class="btn btn-secondary px-4 shadow">
+                    <i class="fas fa-arrow-left"></i> Volver al Portal
+                </a>
+            }
+            else
+            {
+                <a asp-action="Index" class="btn btn-secondary px-4 shadow">
+                    <i class="fas fa-arrow-left"></i> Volver a la Lista
+                </a>
+            }
         </div>
     </form>
 </div>
@@ -158,19 +182,14 @@
                 return;
             }
 
-            // Extraer el nombre del platillo y el precio desde el texto de la opción seleccionada
             const opcionSeleccionada = select.options[select.selectedIndex];
-            const textoCompleto = opcionSeleccionada.text; // Ej: "Lomo saltado (S/ 30.00)"
+            const textoCompleto = opcionSeleccionada.text;
 
-            // Intentamos extraer el precio de forma limpia.
-            // Si manejas el precio en un atributo data-precio="item.PrecioVenta" en el HTML sería ideal,
-            // si no, lo extraemos del texto asumiendo el formato estandarizado:
             let precio = 0;
             const matchPrecio = textoCompleto.match(/S\/\s*([0-9.]+)/);
             if (matchPrecio && matchPrecio[1]) {
                 precio = parseFloat(matchPrecio[1]);
             } else {
-                // Precio de respaldo por si acaso
                 precio = 30.00;
             }
 
@@ -185,24 +204,23 @@
             fila.classList.add("border-bottom", "border-secondary");
 
             fila.innerHTML = `
-                        <td>
-                            <!-- Inputs ocultos con la nomenclatura exacta que espera ASP.NET Core para enlazar la lista List<DetallePedido> -->
-                            <input type="hidden" name="DetallePedidos[${indexDetalle}].IdPlatillo" value="${idPlatillo}" />
-                            <input type="hidden" name="DetallePedidos[${indexDetalle}].Cantidad" value="${cantidad}" />
-                            <input type="hidden" name="DetallePedidos[${indexDetalle}].PrecioUnitario" value="${precio}" />
-                            <input type="hidden" name="DetallePedidos[${indexDetalle}].Notas" value="${notas}" />
-                            <strong class="text-white">${nombrePlatillo}</strong>
-                        </td>
-                        <td class="text-center"><span class="badge bg-secondary px-3">${cantidad}</span></td>
-                        <td class="text-end text-muted">S/ ${precio.toFixed(2)}</td>
-                        <td class="text-end text-warning fw-bold">S/ ${subtotal.toFixed(2)}</td>
-                        <td class="text-muted small">${notas ? notas : '-'}</td>
-                        <td class="text-center">
-                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removerFilaDetalle(${indexDetalle}, ${subtotal})">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    `;
+                                        <td>
+                                            <input type="hidden" name="DetallePedidos[${indexDetalle}].IdPlatillo" value="${idPlatillo}" />
+                                            <input type="hidden" name="DetallePedidos[${indexDetalle}].Cantidad" value="${cantidad}" />
+                                            <input type="hidden" name="DetallePedidos[${indexDetalle}].PrecioUnitario" value="${precio}" />
+                                            <input type="hidden" name="DetallePedidos[${indexDetalle}].Notas" value="${notas}" />
+                                            <strong class="text-white">${nombrePlatillo}</strong>
+                                        </td>
+                                        <td class="text-center"><span class="badge bg-secondary px-3">${cantidad}</span></td>
+                                        <td class="text-end text-muted">S/ ${precio.toFixed(2)}</td>
+                                        <td class="text-end text-warning fw-bold">S/ ${subtotal.toFixed(2)}</td>
+                                        <td class="text-muted small">${notas ? notas : '-'}</td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removerFilaDetalle(${indexDetalle}, ${subtotal})">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    `;
 
             tbody.appendChild(fila);
 
@@ -241,7 +259,6 @@
                 fila.querySelector('input[name$=".PrecioUnitario"]').setAttribute("name", `DetallePedidos[${indexDetalle}].PrecioUnitario`);
                 fila.querySelector('input[name$=".Notas"]').setAttribute("name", `DetallePedidos[${indexDetalle}].Notas`);
 
-                // Actualizamos el botón de eliminar de la fila con su nuevo índice
                 const hiddenSubtotal = parseFloat(fila.querySelector('input[name$=".PrecioUnitario"]').value) * parseInt(fila.querySelector('input[name$=".Cantidad"]').value);
                 fila.querySelector('button').setAttribute("onclick", `removerFilaDetalle(${indexDetalle}, ${hiddenSubtotal})`);
 

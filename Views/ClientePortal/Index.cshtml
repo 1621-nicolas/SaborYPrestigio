@@ -14,13 +14,23 @@
             <small>Portal Cliente</small>
         </div>
 
-        <a class="active">🏠 Inicio</a>
+        <a class="active" asp-controller="ClientePortal" asp-action="Index">🏠 Inicio</a>
 
         <a asp-controller="Reservas" asp-action="Create">📅 Realizar Reserva</a>
-        <a asp-controller="Platillos" asp-action="Index">🍴 Ver Menú</a>
+        <!-- 🔥 Enlace corregido con ancla -->
+        <a href="#seccion-menu">🍴 Ver Menú</a>
         <a asp-controller="Pedidos" asp-action="Create">🛒 Pedido Web</a>
-        <a asp-controller="Pedidos" asp-action="Index">📦 Mis Pedidos</a>
+        <!-- 🔥 Enlace corregido con ancla -->
+        <a href="#seccion-pedidos">📦 Mis Pedidos</a>
 
+        <!-- Botón de Cerrar Sesión (Mantiene la misma lógica que el dashboard admin) -->
+        <div class="mt-5 px-3">
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="btn btn-outline-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2 border-secondary text-danger">
+                    <i class="fas fa-sign-out-alt"></i> Salir
+                </button>
+            </form>
+        </div>
     </aside>
 
     <!-- MAIN -->
@@ -76,8 +86,8 @@
                 </div>
 
                 <div class="col-md-4">
-                    <a asp-controller="Platillos"
-                       asp-action="Index"
+                    <!-- 🔥 Enlace corregido con ancla -->
+                    <a href="#seccion-menu"
                        class="btn btn-dark w-100 quick-btn">
                         🍴 Menú
                     </a>
@@ -96,7 +106,8 @@
         </div>
 
         <!-- MENÚ -->
-        <div class="dashboard-card mb-4">
+        <!-- 🔥 Se le agregó el ID "seccion-menu" -->
+        <div class="dashboard-card mb-4" id="seccion-menu">
 
             <h4 class="titulo-ventas mb-3">Menú Disponible</h4>
 
@@ -138,7 +149,8 @@
         </div>
 
         <!-- PEDIDOS -->
-        <div class="dashboard-card">
+        <!-- 🔥 Se le agregó el ID "seccion-pedidos" -->
+        <div class="dashboard-card" id="seccion-pedidos">
 
             <h4 class="titulo-estados mb-3">Estado de Mis Pedidos</h4>
 
@@ -170,7 +182,7 @@
                                 {
                                     <span class="badge bg-warning text-dark">En Espera</span>
                                 }
-                                else if (pedido.EstadoPedido == "En Preparación")
+                                else if (pedido.EstadoPedido == "En Preparación" || pedido.EstadoPedido == "En Cocina")
                                 {
                                     <span class="badge bg-primary">En Preparación</span>
                                 }
@@ -200,5 +212,4 @@
         </div>
 
     </main>
-
 </div>

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SaborPrestigioMVC.Data;
 using SaborPrestigioMVC.Models;
 
-[Authorize]
+[Authorize(Roles = "Administrador, Cajero")]
 public class PlatillosController : Controller
 {
     private readonly AppDbContext _context;

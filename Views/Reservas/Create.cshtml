@@ -7,108 +7,120 @@
 <link rel="stylesheet" href="~/css/dashboard.css" />
 
 <div class="main-dashboard">
-
     <div class="dashboard-card">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-
             <div>
                 <h2 class="titulo-ventas">📅 Nueva Reserva</h2>
                 <span style="color:#ccc;">Complete los datos de la reserva</span>
             </div>
 
-            <a asp-action="Index" class="btn btn-secondary">
-                ← Volver
-            </a>
-
+            @if (ViewBag.EsClienteWeb == true)
+            {
+                <a asp-controller="ClientePortal" asp-action="Index" class="btn btn-secondary">
+                    ← Volver al Portal
+                </a>
+            }
+            else
+            {
+                <a asp-action="Index" class="btn btn-secondary">
+                    ← Volver a la Lista
+                </a>
+            }
         </div>
 
         <form asp-action="Create" method="post">
-
             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-            <!-- CLIENTE -->
-            <div class="mb-3">
-                <label class="form-label">Cliente</label>
-                <select asp-for="IdCliente"
-                        class="form-control"
-                        asp-items="ViewBag.Clientes">
-                    <option value="">Seleccione cliente</option>
-                </select>
-                <span asp-validation-for="IdCliente" class="text-danger"></span>
-            </div>
+            @if (ViewBag.EsClienteWeb == true)
+            {
+                <div class="mb-3">
+                    <label class="form-label text-warning fw-bold">Cliente</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary" value="@ViewBag.NombreClienteLogueado" readonly />
 
-            <!-- MESA -->
-            <div class="mb-3">
-                <label class="form-label">Mesa</label>
-                <select asp-for="IdMesa"
-                        class="form-control"
-                        asp-items="ViewBag.Mesas">
-                    <option value="">Seleccione mesa</option>
-                </select>
-                <span asp-validation-for="IdMesa" class="text-danger"></span>
-            </div>
+                    <input type="hidden" asp-for="IdCliente" value="@ViewBag.IdClienteLogueado" />
+                    <input type="hidden" asp-for="Origen" value="Web" />
+                </div>
+
+                <div class="alert alert-info bg-black border-secondary text-muted small mt-2 mb-4">
+                    <i class="fas fa-info-circle text-info me-1"></i> Su reserva será registrada como <strong>Pendiente</strong>. Un administrador confirmará y le asignará una mesa en el local.
+                </div>
+            }
+            else
+            {
+                <div class="mb-3">
+                    <label class="form-label">Cliente</label>
+                    <select asp-for="IdCliente" class="form-control" asp-items="ViewBag.Clientes">
+                        <option value="">Seleccione cliente</option>
+                    </select>
+                    <span asp-validation-for="IdCliente" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mesa</label>
+                    <select asp-for="IdMesa" class="form-control" asp-items="ViewBag.Mesas">
+                        <option value="">Seleccione mesa (Opcional)</option>
+                    </select>
+                    <span asp-validation-for="IdMesa" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Origen de la Reserva</label>
+                    <select asp-for="Origen" class="form-control">
+                        <option value="">Seleccione origen</option>
+                        <option value="Web">Web</option>
+                        <option value="Teléfono">Teléfono</option>
+                        <option value="Presencial">Presencial</option>
+                    </select>
+                    <span asp-validation-for="Origen" class="text-danger"></span>
+                </div>
+            }
 
             <div class="row">
-
                 <div class="col-md-6 mb-3">
-                    <label asp-for="FechaReserva" class="form-label"></label>
+                    <label asp-for="FechaReserva" class="form-label text-warning fw-bold">Fecha de Reserva</label>
                     <input asp-for="FechaReserva" type="date" class="form-control" />
                     <span asp-validation-for="FechaReserva" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label asp-for="HoraReserva" class="form-label"></label>
+                    <label asp-for="HoraReserva" class="form-label text-warning fw-bold">Hora de Reserva</label>
                     <input asp-for="HoraReserva" type="time" class="form-control" />
                     <span asp-validation-for="HoraReserva" class="text-danger"></span>
                 </div>
-                <div class="mb-3">
-                    <label asp-for="CantidadPersonas" class="form-label">
+
+                <div class="col-md-12 mb-3">
+                    <label asp-for="CantidadPersonas" class="form-label text-warning fw-bold">
                         Cantidad de Personas
                     </label>
-
-                    <input asp-for="CantidadPersonas"
-                           type="number"
-                           min="1"
-                           class="form-control" />
-
-                    <span asp-validation-for="CantidadPersonas"
-                          class="text-danger"></span>
+                    <input asp-for="CantidadPersonas" type="number" min="1" class="form-control" />
+                    <span asp-validation-for="CantidadPersonas" class="text-danger"></span>
                 </div>
             </div>
 
-            <!-- ORIGEN (CORREGIDO) -->
-            <div class="mb-3">
-                <label class="form-label">Origen de la Reserva</label>
-
-                <select asp-for="Origen" class="form-control">
-                    <option value="">Seleccione origen</option>
-                    <option value="Web">Web</option>
-                    <option value="Teléfono">Teléfono</option>
-                    <option value="Presencial">Presencial</option>
-                </select>
-
-                <span asp-validation-for="Origen" class="text-danger"></span>
-            </div>
-
-            <hr />
+            <hr class="border-secondary mt-2 mb-3" />
 
             <div class="d-flex gap-2">
-
                 <button type="submit" class="btn btn-warning fw-bold">
                     💾 Registrar Reserva
                 </button>
 
-                <a asp-action="Index" class="btn btn-outline-light">
-                    Cancelar
-                </a>
-
+                @if (ViewBag.EsClienteWeb == true)
+                {
+                    <a asp-controller="ClientePortal" asp-action="Index" class="btn btn-outline-light">
+                        Cancelar
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn btn-outline-light">
+                        Cancelar
+                    </a>
+                }
             </div>
 
         </form>
-
     </div>
-
 </div>
 
 @section Scripts {

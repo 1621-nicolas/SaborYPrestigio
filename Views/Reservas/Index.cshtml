@@ -8,14 +8,19 @@
 
 <div class="dashboard-card">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-4 text-white">
+        <div>
+            <h2 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Gestión de Reservas</h2>
+        </div>
 
-        <h4 class="titulo-estados">📅 Gestión de Reservas</h4>
-
-        <a asp-action="Create" class="btn btn-warning fw-bold">
-            + Nueva Reserva
-        </a>
-
+        <div class="d-flex gap-2">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-light d-flex align-items-center">
+                <i class="fas fa-arrow-left me-2"></i> Volver al Inicio
+            </a>
+            <a asp-action="Create" class="btn btn-warning fw-bold text-dark d-flex align-items-center">
+                <i class="fas fa-plus me-1"></i> Nueva Reserva
+            </a>
+        </div>
     </div>
 
     <div class="table-responsive">
