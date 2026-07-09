@@ -136,15 +136,32 @@ public class PlatillosController : Controller
     // POST: PLATILLOS/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id) // <-- Cambiado a id
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var platillo = await _context.Platillos.FindAsync(id);
         if (platillo != null)
         {
-            _context.Platillos.Remove(platillo);
+            try
+            {
+                // Intentamos eliminarlo físicamente
+                _context.Platillos.Remove(platillo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException)
+            {
+                // Si SQL Server bloquea la eliminación porque está en un pedido, lo atrapamos aquí
+                ViewBag.ErrorIntegridad = "No se puede eliminar este platillo porque ya forma parte del historial de pedidos o recetas del restaurante. Para quitarlo del menú, te sugerimos ir a Editar y cambiar su estado a 'Agotado'.";
+
+                // Recargamos los datos para mostrar la vista de error
+                platillo = await _context.Platillos
+                    .Include(p => p.CategoriaPlato)
+                    .FirstOrDefaultAsync(m => m.IdPlatillo == id);
+
+                return View(platillo);
+            }
         }
 
-        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 

@@ -51,8 +51,13 @@
                             @item.StockActual
                         </td>
 
-                        <td class="text-end text-muted">
+                        <td class="text-end text-white">
                             @item.StockMinimo
+                        </td>
+
+                        <!-- 🔥 AQUÍ ESTÁ LA SOLUCIÓN: La columna que faltaba con el precio real -->
+                        <td class="text-end text-success fw-bold">
+                            S/ @item.PrecioCostoPromedio.ToString("0.00")
                         </td>
 
                         <td class="text-center">
@@ -81,7 +86,6 @@
                                class="btn btn-sm btn-info text-white px-2">
                                 Ver
                             </a>
-                          
                         </td>
                     </tr>
                 }

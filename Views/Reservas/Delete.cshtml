@@ -1,48 +1,35 @@
 @model SaborPrestigioMVC.Models.Reserva
 
-<h2>Eliminar Reserva</h2>
+@{
+    ViewData["Title"] = "Eliminar Reserva";
+}
+<link rel="stylesheet" href="~/css/dashboard.css" />
 
-<div class="alert alert-danger">
+<div class="main-dashboard">
+    <div class="dashboard-card" style="max-width: 600px; margin: 0 auto; border-left: 5px solid #dc3545;">
 
-    ¿Está seguro de eliminar esta reserva?
+        <div class="text-center mb-4 text-white">
+            <h2 class="text-danger fw-bold"><i class="fas fa-exclamation-triangle"></i> Cancelar / Eliminar Reserva</h2>
+            <p class="fs-5 mt-2">¿Está seguro de que desea remover permanentemente esta reserva?</p>
+            <p class="text-muted small">Esta acción liberará la mesa asignada inmediatamente en el sistema.</p>
+        </div>
 
+        <div class="bg-dark p-4 rounded mb-4 text-white border border-secondary">
+            <div class="mb-2">
+                <strong>Cliente:</strong> @Model.Cliente?.Nombre @Model.Cliente?.Apellido
+            </div>
+            <div class="mb-2">
+                <strong>Ubicación:</strong> @(Model.Mesa != null ? $"Mesa {Model.Mesa.NumeroMesa}" : "Sin Mesa")
+            </div>
+            <div class="mb-0">
+                <strong>Programación:</strong> @Model.FechaReserva.ToString("dd/MM/yyyy") a las @Model.HoraReserva
+            </div>
+        </div>
+
+        <form asp-action="Delete" class="text-center">
+            <input type="hidden" asp-for="IdReserva" />
+            <button type="submit" class="btn btn-danger fw-bold px-4 me-2">🗑️ Confirmar Eliminación</button>
+            <a asp-action="Index" class="btn btn-secondary px-4">Cancelar</a>
+        </form>
+    </div>
 </div>
-
-<dl class="row">
-
-    <dt class="col-sm-3">Cliente</dt>
-    <dd class="col-sm-9">
-        @Model.Cliente?.Nombre @Model.Cliente?.Apellido
-    </dd>
-
-    <dt class="col-sm-3">Mesa</dt>
-    <dd class="col-sm-9">
-        Mesa @Model.Mesa?.NumeroMesa
-    </dd>
-
-    <dt class="col-sm-3">Fecha</dt>
-    <dd class="col-sm-9">
-        @Model.FechaReserva.ToString("dd/MM/yyyy")
-    </dd>
-
-    <dt class="col-sm-3">Hora</dt>
-    <dd class="col-sm-9">
-        @Model.HoraReserva
-    </dd>
-
-</dl>
-
-<form asp-action="Delete">
-
-    <input type="hidden" asp-for="IdReserva" />
-
-    <button type="submit" class="btn btn-danger">
-        Eliminar
-    </button>
-
-    <a asp-action="Index"
-       class="btn btn-secondary">
-        Cancelar
-    </a>
-
-</form>

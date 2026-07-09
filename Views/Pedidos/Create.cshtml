@@ -208,7 +208,7 @@
                                             <input type="hidden" name="DetallePedidos[${indexDetalle}].IdPlatillo" value="${idPlatillo}" />
                                             <input type="hidden" name="DetallePedidos[${indexDetalle}].Cantidad" value="${cantidad}" />
                                             <input type="hidden" name="DetallePedidos[${indexDetalle}].PrecioUnitario" value="${precio}" />
-                                            <input type="hidden" name="DetallePedidos[${indexDetalle}].Notas" value="${notas}" />
+                                            <input type="hidden" name="DetallePedidos[${indexDetalle}].NotasChef" value="${notas}" />
                                             <strong class="text-white">${nombrePlatillo}</strong>
                                         </td>
                                         <td class="text-center"><span class="badge bg-secondary px-3">${cantidad}</span></td>
@@ -257,7 +257,7 @@
                 fila.querySelector('input[name$=".IdPlatillo"]').setAttribute("name", `DetallePedidos[${indexDetalle}].IdPlatillo`);
                 fila.querySelector('input[name$=".Cantidad"]').setAttribute("name", `DetallePedidos[${indexDetalle}].Cantidad`);
                 fila.querySelector('input[name$=".PrecioUnitario"]').setAttribute("name", `DetallePedidos[${indexDetalle}].PrecioUnitario`);
-                fila.querySelector('input[name$=".Notas"]').setAttribute("name", `DetallePedidos[${indexDetalle}].Notas`);
+                fila.querySelector('input[name$=".NotasChef"]').setAttribute("name", `DetallePedidos[${indexDetalle}].NotasChef`);
 
                 const hiddenSubtotal = parseFloat(fila.querySelector('input[name$=".PrecioUnitario"]').value) * parseInt(fila.querySelector('input[name$=".Cantidad"]').value);
                 fila.querySelector('button').setAttribute("onclick", `removerFilaDetalle(${indexDetalle}, ${hiddenSubtotal})`);

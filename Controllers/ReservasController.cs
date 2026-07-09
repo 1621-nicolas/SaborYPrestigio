@@ -20,26 +20,27 @@ namespace SaborPrestigioMVC.Controllers
         // GET: RESERVAS
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Reservas.ToListAsync());
+            // 🔥 AQUÍ ESTÁ LA CORRECCIÓN: Incluimos los datos relacionados
+            var reservas = await _context.Reservas
+                .Include(r => r.Cliente)
+                .Include(r => r.Mesa)
+                .OrderByDescending(r => r.FechaReserva)
+                .ToListAsync();
+
+            return View(reservas);
         }
 
         // GET: RESERVAS/Details/5
         public async Task<IActionResult> Details(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var reserva = await _context.Reservas
              .Include(r => r.Cliente)
              .Include(r => r.Mesa)
              .FirstOrDefaultAsync(r => r.IdReserva == id);
 
-            if (reserva == null)
-            {
-                return NotFound();
-            }
+            if (reserva == null) return NotFound();
 
             return View(reserva);
         }
@@ -47,7 +48,6 @@ namespace SaborPrestigioMVC.Controllers
         // GET: Reservas/Create
         public async Task<IActionResult> Create()
         {
-            // 1. Lógica inteligente para ocultar la lista si es un cliente web
             if (User.IsInRole("Cliente"))
             {
                 var claimId = User.FindFirst("UsuarioId")?.Value;
@@ -61,12 +61,10 @@ namespace SaborPrestigioMVC.Controllers
             else
             {
                 ViewBag.EsClienteWeb = false;
-                ViewBag.Clientes = new SelectList(_context.Clientes, "IdCliente", "Nombre");
+                ViewBag.Clientes = new SelectList(_context.Clientes.Select(c => new { c.IdCliente, Nombre = c.Nombre + " " + c.Apellido }), "IdCliente", "Nombre");
             }
 
-            // Cargamos las mesas (aunque para el cliente web se ocultará)
             ViewBag.Mesas = new SelectList(_context.Mesas, "IdMesa", "NumeroMesa");
-
             return View();
         }
 
@@ -75,7 +73,6 @@ namespace SaborPrestigioMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdReserva,IdCliente,IdMesa,FechaReserva,HoraReserva,CantidadPersonas,Origen")] Reserva reserva)
         {
-            // 1. BLINDAJE INICIAL
             if (User.IsInRole("Cliente"))
             {
                 var claimId = User.FindFirst("UsuarioId")?.Value;
@@ -84,193 +81,53 @@ namespace SaborPrestigioMVC.Controllers
                 reserva.IdMesa = null;
             }
 
-            // 2. VALIDACIONES
-            var mesa = await _context.Mesas.FirstOrDefaultAsync(m => m.IdMesa == reserva.IdMesa);
-            if (mesa != null && reserva.CantidadPersonas > mesa.Capacidad)
-            {
-                ModelState.AddModelError("CantidadPersonas", $"La mesa seleccionada solo tiene capacidad para {mesa.Capacidad} personas.");
-            }
-
-            if (reserva.FechaReserva.Date < DateTime.Today)
-            {
-                ModelState.AddModelError("FechaReserva", "No puede registrar reservas en fechas pasadas.");
-            }
-
-            var horaMinima = new TimeSpan(9, 0, 0);
-            var horaMaxima = new TimeSpan(22, 0, 0);
-            if (reserva.HoraReserva < horaMinima || reserva.HoraReserva > horaMaxima)
-            {
-                ModelState.AddModelError("HoraReserva", "Las reservas solo pueden realizarse entre las 09:00 AM y las 10:00 PM.");
-            }
-
             if (ModelState.IsValid)
             {
                 reserva.EstadoReserva = "Pendiente";
                 reserva.FechaCreacion = DateTime.Now;
-
                 _context.Add(reserva);
                 await _context.SaveChangesAsync();
-
-                if (User.IsInRole("Cliente")) return RedirectToAction("Index", "ClientePortal");
-                return RedirectToAction(nameof(Index));
+                return User.IsInRole("Cliente") ? RedirectToAction("Index", "ClientePortal") : RedirectToAction(nameof(Index));
             }
 
-            // ========================================================================
-            // 🔥 CORRECCIÓN: RECARGAR LA SEGURIDAD SI EL FORMULARIO FALLA
-            // ========================================================================
-            if (User.IsInRole("Cliente"))
-            {
-                var claimId = User.FindFirst("UsuarioId")?.Value;
-                long idCliente = string.IsNullOrEmpty(claimId) ? 0 : long.Parse(claimId);
-                var clienteInfo = await _context.Clientes.FindAsync(idCliente);
-
-                ViewBag.EsClienteWeb = true;
-                ViewBag.IdClienteLogueado = idCliente;
-                ViewBag.NombreClienteLogueado = clienteInfo != null ? $"{clienteInfo.Nombre} {clienteInfo.Apellido}".Trim() : "Cliente Web";
-            }
-            else
-            {
-                ViewBag.EsClienteWeb = false;
-                ViewBag.Clientes = new SelectList(_context.Clientes.Select(c => new { c.IdCliente, Nombre = c.Nombre + " " + c.Apellido }), "IdCliente", "Nombre", reserva.IdCliente);
-            }
-
-            ViewBag.Mesas = new SelectList(_context.Mesas.Select(m => new { m.IdMesa, Texto = "Mesa " + m.NumeroMesa + " - " + m.Capacidad + " personas" }), "IdMesa", "Texto", reserva.IdMesa);
-
+            ViewBag.Mesas = new SelectList(_context.Mesas, "IdMesa", "NumeroMesa", reserva.IdMesa);
             return View(reserva);
         }
 
         // GET: RESERVAS/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+            var reserva = await _context.Reservas.FindAsync(id);
+            if (reserva == null) return NotFound();
 
-            var reserva = await _context.Reservas
-                .Include(r => r.Cliente)
-                .FirstOrDefaultAsync(m => m.IdReserva == id);
-
-            if (reserva == null)
-            {
-                return NotFound();
-            }
-
-            // CARGAMOS LAS MESAS PARA EL COMBOBOX
-            ViewBag.Mesas = new SelectList(
-                _context.Mesas.Select(m => new
-                {
-                    m.IdMesa,
-                    Texto = "Mesa " + m.NumeroMesa + " - " + m.Capacidad + " personas"
-                }),
-                "IdMesa",
-                "Texto",
-                reserva.IdMesa
-            );
-
-            // CARGAMOS LOS CLIENTES
-            ViewBag.Clientes = new SelectList(
-                _context.Clientes.Select(c => new
-                {
-                    c.IdCliente,
-                    Nombre = c.Nombre + " " + c.Apellido
-                }),
-                "IdCliente",
-                "Nombre",
-                reserva.IdCliente
-            );
-
+            ViewBag.Mesas = new SelectList(_context.Mesas, "IdMesa", "NumeroMesa", reserva.IdMesa);
+            ViewBag.Clientes = new SelectList(_context.Clientes.Select(c => new { c.IdCliente, Nombre = c.Nombre + " " + c.Apellido }), "IdCliente", "Nombre", reserva.IdCliente);
             return View(reserva);
         }
 
         // POST: RESERVAS/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(
-            long id,
-            [Bind("IdReserva,IdCliente,IdMesa,FechaReserva,HoraReserva,CantidadPersonas,Origen,EstadoReserva,FechaCreacion")]
-        Reserva reserva)
+        public async Task<IActionResult> Edit(long id, [Bind("IdReserva,IdCliente,IdMesa,FechaReserva,HoraReserva,CantidadPersonas,Origen,EstadoReserva,FechaCreacion")] Reserva reserva)
         {
-            if (id != reserva.IdReserva)
-            {
-                return NotFound();
-            }
-
-            // Validación de capacidad de mesa
-            var mesa = await _context.Mesas.FindAsync(reserva.IdMesa);
-
-            if (mesa != null && reserva.CantidadPersonas > mesa.Capacidad)
-            {
-                ModelState.AddModelError(
-                    "CantidadPersonas",
-                    $"La mesa seleccionada solo admite {mesa.Capacidad} personas.");
-            }
+            if (id != reserva.IdReserva) return NotFound();
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(reserva);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReservaExists(reserva.IdReserva))
-                    {
-                        return NotFound();
-                    }
-
-                    throw;
-                }
-
+                _context.Update(reserva);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            // RECARGAR COMBOS SI HAY ERROR
-            ViewBag.Clientes = new SelectList(
-                _context.Clientes.Select(c => new
-                {
-                    c.IdCliente,
-                    Nombre = c.Nombre + " " + c.Apellido
-                }),
-                "IdCliente",
-                "Nombre",
-                reserva.IdCliente
-            );
-
-            ViewBag.Mesas = new SelectList(
-                _context.Mesas.Select(m => new
-                {
-                    m.IdMesa,
-                    Texto = "Mesa " + m.NumeroMesa + " - " + m.Capacidad + " personas"
-                }),
-                "IdMesa",
-                "Texto",
-                reserva.IdMesa
-            );
-
             return View(reserva);
         }
 
         // GET: RESERVAS/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var reserva = await _context.Reservas
-                .Include(r => r.Cliente)
-                .Include(r => r.Mesa)
-                .FirstOrDefaultAsync(m => m.IdReserva == id);
-
-            if (reserva == null)
-            {
-                return NotFound();
-            }
-
-            return View(reserva);
+            if (id == null) return NotFound();
+            var reserva = await _context.Reservas.Include(r => r.Cliente).Include(r => r.Mesa).FirstOrDefaultAsync(m => m.IdReserva == id);
+            return reserva == null ? NotFound() : View(reserva);
         }
 
         // POST: RESERVAS/Delete/5
@@ -279,20 +136,8 @@ namespace SaborPrestigioMVC.Controllers
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var reserva = await _context.Reservas.FindAsync(id);
-
-            // Verificamos que exista antes de intentar eliminar
-            if (reserva != null)
-            {
-                _context.Reservas.Remove(reserva);
-                await _context.SaveChangesAsync();
-            }
-
+            if (reserva != null) { _context.Reservas.Remove(reserva); await _context.SaveChangesAsync(); }
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ReservaExists(long id)
-        {
-            return _context.Reservas.Any(e => e.IdReserva == id);
         }
     }
 }

@@ -31,5 +31,6 @@ namespace SaborPrestigioMVC.Models
 
         [ForeignKey("IdPlatillo")]
         public Platillo? Platillo { get; set; }
+
     }
 }

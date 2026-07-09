@@ -8,32 +8,31 @@
     <div class="card bg-dark border-secondary shadow">
         <div class="card-header bg-black border-secondary d-flex justify-content-between align-items-center py-3">
             <h4 class="text-warning mb-0"><i class="fas fa-receipt"></i> Comanda Digital N° #@Model.IdPedido</h4>
-            <span class="badge bg-primary text-uppercase px-3 py-2">@Model.EstadoPedido</span>
+            <span class="badge bg-primary px-3 py-2 text-uppercase">@Model.EstadoPedido</span>
         </div>
+
         <div class="card-body bg-black m-3 rounded border border-secondary p-4">
-            <!-- Encabezado del ticket -->
             <div class="row mb-4">
-                <div class="col-sm-6 mb-2">
-                    <small class="text-muted d-block text-uppercase fw-bold">Cliente</small>
-                    <span>@(Model.Cliente?.Nombre ?? "Cliente General")</span>
+                <div class="col-sm-6 mb-3">
+                    <small class="text-white-50 d-block text-uppercase fw-bold">Cliente</small>
+                    <span class="text-white fw-bold">@(Model.Cliente?.Nombre ?? "Cliente General")</span>
                 </div>
-                <div class="col-sm-6 mb-2">
-                    <small class="text-muted d-block text-uppercase fw-bold">Atendido por</small>
-                    <span>@(Model.Empleado?.Nombre ?? "Canal Virtual Web")</span>
+                <div class="col-sm-6 mb-3">
+                    <small class="text-white-50 d-block text-uppercase fw-bold">Atendido por</small>
+                    <span class="text-white fw-bold">@(Model.Empleado?.Nombre ?? "Canal Virtual Web")</span>
                 </div>
-                <div class="col-sm-6 mb-2">
-                    <small class="text-muted d-block text-uppercase fw-bold">Mesa / Ubicación</small>
-                    <span>@(Model.Mesa != null ? $"Mesa {Model.Mesa.NumeroMesa}" : "Para llevar / Delivery")</span>
+                <div class="col-sm-6 mb-3">
+                    <small class="text-white-50 d-block text-uppercase fw-bold">Mesa / Ubicación</small>
+                    <span class="text-white fw-bold">@(Model.Mesa != null ? $"Mesa {Model.Mesa.NumeroMesa}" : "Para llevar / Delivery")</span>
                 </div>
-                <div class="col-sm-6 mb-2">
-                    <small class="text-muted d-block text-uppercase fw-bold">Fecha de Registro</small>
-                    <span>@Model.FechaPedido.ToString("dd/MM/yyyy HH:mm")</span>
+                <div class="col-sm-6 mb-3">
+                    <small class="text-white-50 d-block text-uppercase fw-bold">Fecha de Registro</small>
+                    <span class="text-white fw-bold">@Model.FechaPedido.ToString("dd/MM/yyyy HH:mm")</span>
                 </div>
             </div>
 
             <hr class="border-secondary" />
 
-            <!-- Cuerpo del ticket -->
             <h5 class="text-warning mb-3">Platillos Solicitados</h5>
             <table class="table table-dark table-borderless align-middle">
                 <thead>
@@ -50,12 +49,14 @@
                         foreach (var item in Model.DetallePedidos)
                         {
                             var subtotal = item.Cantidad * item.PrecioUnitario;
-                            <tr>
+                            <tr class="text-white">
                                 <td>
                                     <div class="fw-bold">@item.Platillo?.NombrePlatillo</div>
                                     @if (!string.IsNullOrEmpty(item.NotasChef))
                                     {
-                                        <small class="text-warning">* Nota: @item.NotasChef</small>
+                                        <div class="text-warning small mt-1">
+                                            <i class="fas fa-comment-dots"></i> Nota: @item.NotasChef
+                                        </div>
                                     }
                                 </td>
                                 <td class="text-center"><span class="badge bg-secondary">@item.Cantidad</span></td>
@@ -72,8 +73,8 @@
                 <span class="fs-3 fw-bold text-warning">S/ @Model.Total.ToString("0.00")</span>
             </div>
         </div>
-        <div class="card-footer bg-black border-secondary py-3 text-end">
 
+        <div class="card-footer bg-black border-secondary py-3 text-end">
             <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Volver</a>
         </div>
     </div>

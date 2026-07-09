@@ -3,26 +3,44 @@
 @{
     ViewData["Title"] = "Retirar Platillo";
 }
-
 <div class="container mt-5 text-white" style="max-width: 550px;">
     <div class="card border-danger bg-dark shadow">
         <div class="card-header bg-black border-danger py-3 text-center">
             <h4 class="text-danger mb-0"><i class="fas fa-trash-alt"></i> ¿Retirar platillo de la carta?</h4>
         </div>
         <div class="card-body p-4 text-center">
-            <p class="text-muted">Esta acción eliminará de forma permanente el platillo de la base de datos de la carta.</p>
 
-            <div class="p-3 bg-black rounded border border-secondary text-start my-4">
-                <div class="mb-2"><strong>Platillo:</strong> <span class="text-white ms-2">@Model.NombrePlatillo</span></div>
-                <div class="mb-2"><strong>Clasificación:</strong> <span class="text-muted ms-2">@(Model.CategoriaPlato?.NombreCategoria ?? "-")</span></div>
-                <div><strong>Precio Actual:</strong> <span class="text-warning ms-2 fw-bold">S/ @Model.PrecioVenta.ToString("0.00")</span></div>
-            </div>
+            @if (ViewBag.ErrorIntegridad != null)
+            {
+                <!-- MENSAJE DE ERROR SI EL PLATILLO YA TIENE HISTORIAL -->
+                <div class="alert alert-warning text-dark fw-bold text-start mb-4 shadow">
+                    <i class="fas fa-exclamation-triangle fs-4 float-start me-3"></i>
+                    @ViewBag.ErrorIntegridad
+                </div>
 
-            <form asp-action="Delete" asp-route-id="@Model.IdPlatillo" method="post" class="mt-4">
-                <input type="hidden" asp-for="IdPlatillo" />
-                <button type="submit" class="btn btn-danger px-4 fw-bold shadow">Confirmar Eliminación</button>
-                <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Cancelar</a>
-            </form>
+                <div class="mt-4">
+                    <a asp-action="Edit" asp-route-id="@Model.IdPlatillo" class="btn btn-warning px-4 fw-bold shadow">Ir a Editar (Desactivar)</a>
+                    <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Volver a la lista</a>
+                </div>
+            }
+            else
+            {
+                <!-- VISTA NORMAL DE ELIMINACIÓN -->
+                <p class="text-muted">Esta acción eliminará de forma permanente el platillo de la base de datos de la carta.</p>
+
+                <div class="p-3 bg-black rounded border border-secondary text-start my-4">
+                    <div class="mb-2"><strong>Platillo:</strong> <span class="text-white ms-2">@Model.NombrePlatillo</span></div>
+                    <div class="mb-2"><strong>Clasificación:</strong> <span class="text-muted ms-2">@(Model.CategoriaPlato?.NombreCategoria ?? "-")</span></div>
+                    <div><strong>Precio Actual:</strong> <span class="text-warning ms-2 fw-bold">S/ @Model.PrecioVenta.ToString("0.00")</span></div>
+                </div>
+
+                <form asp-action="Delete" asp-route-id="@Model.IdPlatillo" method="post" class="mt-4">
+                    <input type="hidden" asp-for="IdPlatillo" />
+                    <button type="submit" class="btn btn-danger px-4 fw-bold shadow">Confirmar Eliminación</button>
+                    <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Cancelar</a>
+                </form>
+            }
+
         </div>
     </div>
 </div>

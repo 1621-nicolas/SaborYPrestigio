@@ -113,7 +113,7 @@ namespace SaborPrestigioMVC.Controllers
                 // ====================================================================
                 // 🔥 NUEVO CÓDIGO: Agrupar platillos duplicados y sumar sus cantidades
                 // ====================================================================
-                var detallesAgrupados = pedido.DetallePedidos
+                var detallesAgrupados = (pedido.DetallePedidos ?? new List<DetallePedido>())
                     .GroupBy(d => d.IdPlatillo)
                     .Select(g => new DetallePedido
                     {
@@ -122,7 +122,7 @@ namespace SaborPrestigioMVC.Controllers
                         NotasChef = g.FirstOrDefault()?.NotasChef
                     }).ToList();
 
-                // Reemplazamos la lista original con la lista limpia y agrupada
+                // Reemplazamos la lista original
                 pedido.DetallePedidos = detallesAgrupados;
                 // ====================================================================
 

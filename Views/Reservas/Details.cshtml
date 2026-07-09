@@ -1,55 +1,58 @@
 @model SaborPrestigioMVC.Models.Reserva
 
-<h2>Detalle de Reserva</h2>
+@{
+    ViewData["Title"] = "Detalle de Reserva";
+}
+<link rel="stylesheet" href="~/css/dashboard.css" />
 
-<hr />
+<div class="main-dashboard">
+    <div class="dashboard-card" style="max-width: 750px; margin: 0 auto;">
 
-<dl class="row">
+        <div class="text-center mb-4 text-white">
+            <h2 class="text-warning fw-bold">📋 Detalle de la Reserva #@Model.IdReserva</h2>
+            <p class="text-muted">Información operativa registrada para control de aforo</p>
+        </div>
 
-    <dt class="col-sm-3">Cliente</dt>
-    <dd class="col-sm-9">
-        @Model.Cliente?.Nombre @Model.Cliente?.Apellido
-    </dd>
+        <div class="row bg-dark p-4 rounded border border-secondary text-white">
+            <div class="col-md-6 mb-3">
+                <small class="text-warning fw-bold d-block">Cliente Solicitante</small>
+                <span class="fs-5">@(Model.Cliente != null ? $"{Model.Cliente.Nombre} {Model.Cliente.Apellido}" : "Cliente General")</span>
+            </div>
 
-    <dt class="col-sm-3">Mesa</dt>
-    <dd class="col-sm-9">
-        Mesa @Model.Mesa?.NumeroMesa
-    </dd>
+            <div class="col-md-6 mb-3">
+                <small class="text-warning fw-bold d-block">Mesa Asignada</small>
+                <span class="fs-5">@(Model.Mesa != null ? $"Mesa {Model.Mesa.NumeroMesa} ({Model.Mesa.Zona})" : "Sin mesa asignada")</span>
+            </div>
 
-    <dt class="col-sm-3">Fecha</dt>
-    <dd class="col-sm-9">
-        @Model.FechaReserva.ToString("dd/MM/yyyy")
-    </dd>
+            <div class="col-md-4 mb-3">
+                <small class="text-warning fw-bold d-block">Fecha del Servicio</small>
+                <span class="fs-5">🗓️ @Model.FechaReserva.ToString("dd/MM/yyyy")</span>
+            </div>
 
-    <dt class="col-sm-3">Hora</dt>
-    <dd class="col-sm-9">
-        @Model.HoraReserva
-    </dd>
+            <div class="col-md-4 mb-3">
+                <small class="text-warning fw-bold d-block">Hora Programada</small>
+                <span class="fs-5">⏰ @Model.HoraReserva</span>
+            </div>
 
-    <dt class="col-sm-3">Personas</dt>
-    <dd class="col-sm-9">
-        @Model.CantidadPersonas
-    </dd>
+            <div class="col-md-4 mb-3">
+                <small class="text-warning fw-bold d-block">Cantidad de Asistentes</small>
+                <span class="fs-5">👥 @Model.CantidadPersonas personas</span>
+            </div>
 
-    <dt class="col-sm-3">Origen</dt>
-    <dd class="col-sm-9">
-        @Model.Origen
-    </dd>
+            <div class="col-md-6 mb-1">
+                <small class="text-warning fw-bold d-block">Canal de Origen</small>
+                <span class="fs-5">@Model.Origen</span>
+            </div>
 
-    <dt class="col-sm-3">Estado</dt>
-    <dd class="col-sm-9">
-        @Model.EstadoReserva
-    </dd>
+            <div class="col-md-6 mb-1">
+                <small class="text-warning fw-bold d-block">Estado de Gestión</small>
+                <span class="fs-5">@Model.EstadoReserva</span>
+            </div>
+        </div>
 
-</dl>
-
-<a asp-action="Edit"
-   asp-route-idreserva="@Model.IdReserva"
-   class="btn btn-warning">
-    Editar
-</a>
-
-<a asp-action="Index"
-   class="btn btn-secondary">
-    Volver
-</a>
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a asp-action="Edit" asp-route-id="@Model.IdReserva" class="btn btn-warning fw-bold px-4">✏️ Gestionar / Editar</a>
+            <a asp-action="Index" class="btn btn-outline-light px-4">Volver a la Lista</a>
+        </div>
+    </div>
+</div>
