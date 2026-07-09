@@ -13,15 +13,15 @@ namespace SaborPrestigioMVC.Models
 
         [Required]
         [Column("dni")]
-        public string Dni { get; set; }
+        public string Dni { get; set; } = string.Empty;
 
         [Required]
         [Column("nombre")]
-        public string Nombre { get; set; }
+        public string Nombre { get; set; } = string.Empty;
 
         [Required]
         [Column("apellido")]
-        public string Apellido { get; set; }
+        public string Apellido { get; set; } = string.Empty;
 
         [Column("telefono")]
         public string? Telefono { get; set; }
@@ -31,11 +31,11 @@ namespace SaborPrestigioMVC.Models
 
         [Required]
         [Column("usuario")]
-        public string Usuario { get; set; }
+        public string Usuario { get; set; } = string.Empty;
 
         [Required]
         [Column("contrasenia_hash")]
-        public string ContraseniaHash { get; set; }
+        public string ContraseniaHash { get; set; } = string.Empty;
 
         [Column("id_rol")]
         public int IdRol { get; set; }

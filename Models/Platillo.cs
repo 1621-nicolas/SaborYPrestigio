@@ -13,7 +13,7 @@ namespace SaborPrestigioMVC.Models
 
         [Required]
         [Column("nombre_platillo")]
-        public string NombrePlatillo { get; set; }
+        public string NombrePlatillo { get; set; } = string.Empty;
 
         [Column("descripcion_gourmet")]
         public string? DescripcionGourmet { get; set; }
@@ -31,7 +31,7 @@ namespace SaborPrestigioMVC.Models
         public bool Disponibilidad { get; set; } = true;
 
         [ForeignKey("IdCategoria")]
-        public CategoriaPlato? CategoriaPlato { get; set; }
+        public virtual CategoriaPlato? CategoriaPlato { get; set; }
 
         public ICollection<DetallePedido>? DetallePedidos { get; set; }
         public ICollection<RecetaPlatillo>? RecetasPlatillo { get; set; }
