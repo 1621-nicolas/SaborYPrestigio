@@ -24,9 +24,9 @@ namespace SaborPrestigioMVC.Controllers
         }
 
         // GET: RESERVAS/Details/5
-        public async Task<IActionResult> Details(long? idreserva)
+        public async Task<IActionResult> Details(long? id)
         {
-            if (idreserva == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -34,7 +34,8 @@ namespace SaborPrestigioMVC.Controllers
             var reserva = await _context.Reservas
              .Include(r => r.Cliente)
              .Include(r => r.Mesa)
-             .FirstOrDefaultAsync(r => r.IdReserva == idreserva);
+             .FirstOrDefaultAsync(r => r.IdReserva == id);
+
             if (reserva == null)
             {
                 return NotFound();
@@ -138,15 +139,59 @@ namespace SaborPrestigioMVC.Controllers
             return View(reserva);
         }
 
+        // GET: RESERVAS/Edit/5
+        public async Task<IActionResult> Edit(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var reserva = await _context.Reservas
+                .Include(r => r.Cliente)
+                .FirstOrDefaultAsync(m => m.IdReserva == id);
+
+            if (reserva == null)
+            {
+                return NotFound();
+            }
+
+            // CARGAMOS LAS MESAS PARA EL COMBOBOX
+            ViewBag.Mesas = new SelectList(
+                _context.Mesas.Select(m => new
+                {
+                    m.IdMesa,
+                    Texto = "Mesa " + m.NumeroMesa + " - " + m.Capacidad + " personas"
+                }),
+                "IdMesa",
+                "Texto",
+                reserva.IdMesa
+            );
+
+            // CARGAMOS LOS CLIENTES
+            ViewBag.Clientes = new SelectList(
+                _context.Clientes.Select(c => new
+                {
+                    c.IdCliente,
+                    Nombre = c.Nombre + " " + c.Apellido
+                }),
+                "IdCliente",
+                "Nombre",
+                reserva.IdCliente
+            );
+
+            return View(reserva);
+        }
+
         // POST: RESERVAS/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
-            long? idreserva,
-            [Bind("IdReserva,IdCliente,IdMesa,FechaReserva,HoraReserva,CantidadPersonas,Origen,EstadoReserva")]
+            long id,
+            [Bind("IdReserva,IdCliente,IdMesa,FechaReserva,HoraReserva,CantidadPersonas,Origen,EstadoReserva,FechaCreacion")]
         Reserva reserva)
         {
-            if (idreserva != reserva.IdReserva)
+            if (id != reserva.IdReserva)
             {
                 return NotFound();
             }
@@ -181,7 +226,7 @@ namespace SaborPrestigioMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // RECARGAR COMBOS
+            // RECARGAR COMBOS SI HAY ERROR
             ViewBag.Clientes = new SelectList(
                 _context.Clientes.Select(c => new
                 {
@@ -208,15 +253,18 @@ namespace SaborPrestigioMVC.Controllers
         }
 
         // GET: RESERVAS/Delete/5
-        public async Task<IActionResult> Delete(long? idreserva)
+        public async Task<IActionResult> Delete(long? id)
         {
-            if (idreserva == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var reserva = await _context.Reservas
-                .FirstOrDefaultAsync(m => m.IdReserva == idreserva);
+                .Include(r => r.Cliente)
+                .Include(r => r.Mesa)
+                .FirstOrDefaultAsync(m => m.IdReserva == id);
+
             if (reserva == null)
             {
                 return NotFound();
@@ -228,12 +276,9 @@ namespace SaborPrestigioMVC.Controllers
         // POST: RESERVAS/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long? idreserva)
+        public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            // Validación de seguridad
-            if (idreserva == null) return NotFound();
-
-            var reserva = await _context.Reservas.FindAsync(idreserva);
+            var reserva = await _context.Reservas.FindAsync(id);
 
             // Verificamos que exista antes de intentar eliminar
             if (reserva != null)
@@ -245,9 +290,9 @@ namespace SaborPrestigioMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ReservaExists(long? idreserva)
+        private bool ReservaExists(long id)
         {
-            return _context.Reservas.Any(e => e.IdReserva == idreserva);
+            return _context.Reservas.Any(e => e.IdReserva == id);
         }
     }
 }

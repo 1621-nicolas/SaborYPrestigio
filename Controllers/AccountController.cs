@@ -22,7 +22,11 @@ public class AccountController : Controller
     {
         if (User.Identity != null && User.Identity.IsAuthenticated)
         {
-            return RedirigirSegunRol(User.FindFirstValue(ClaimTypes.Role));
+            // 1. Obtener el rol de la cookie
+            var rol = User.FindFirstValue(ClaimTypes.Role);
+
+            // 2. Verificar si el rol tiene acceso a lo que le corresponde
+            return RedirigirSegunRol(rol);
         }
         return View();
     }
@@ -84,12 +88,14 @@ public class AccountController : Controller
     private IActionResult RedirigirSegunRol(string? rol)
     {
         return rol switch
-        {
-            "Administrador" => RedirectToAction("Index", "Home"),
-            "Trabajador" => RedirectToAction("Index", "Pedidos"),
-            "Cliente" => RedirectToAction("Index", "ClientePortal"),
-            _ => RedirectToAction("Login")
-        };
+    {
+        "Administrador" => RedirectToAction("Index", "Home"),
+        "Mozo"          => RedirectToAction("Index", "Pedidos"),
+        "Cajero"        => RedirectToAction("Index", "ComprobantedePago"),
+        "Chef"          => RedirectToAction("Index", "Pedidos"), // O a donde prefieras
+        "Cliente"       => RedirectToAction("Index", "ClientePortal"),
+        _               => RedirectToAction("Login")
+    };
     }
 
     // GET: /Account/Register

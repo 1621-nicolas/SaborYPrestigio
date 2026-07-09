@@ -3,180 +3,102 @@
 @{
     ViewData["Title"] = "Editar Reserva";
 }
-
 <link rel="stylesheet" href="~/css/dashboard.css" />
 
 <div class="main-dashboard">
-
-    ```
     <div class="dashboard-card">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-
             <div>
                 <h2 class="titulo-ventas">✏️ Editar Reserva</h2>
                 <span style="color:#ccc;">
-                    Modifique los datos de la reserva
+                    Asigna la mesa y confirma la reserva
                 </span>
             </div>
 
             <a asp-action="Index" class="btn btn-secondary">
                 ← Volver
             </a>
-
         </div>
 
         <form asp-action="Edit">
-
-            <div asp-validation-summary="ModelOnly"
-                 class="alert alert-danger">
-            </div>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
             <input type="hidden" asp-for="IdReserva" />
+            <input type="hidden" asp-for="FechaCreacion" />
 
-            <!-- CLIENTE -->
-            <div class="mb-3">
-                <label class="form-label">Cliente</label>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-warning">Cliente</label>
+                    <select asp-for="IdCliente" asp-items="ViewBag.Clientes" class="form-control" style="pointer-events: none; background-color: #2a2a2a; color: #aaa;">
+                    </select>
+                    <span asp-validation-for="IdCliente" class="text-danger"></span>
+                </div>
 
-                <select asp-for="IdCliente"
-                        asp-items="ViewBag.Clientes"
-                        class="form-control">
-                </select>
-
-                <span asp-validation-for="IdCliente"
-                      class="text-danger"></span>
-            </div>
-
-            <!-- MESA -->
-            <div class="mb-3">
-                <label class="form-label">Mesa</label>
-
-                <select asp-for="IdMesa"
-                        asp-items="ViewBag.Mesas"
-                        class="form-control">
-                </select>
-
-                <span asp-validation-for="IdMesa"
-                      class="text-danger"></span>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-warning fw-bold">Asignar Mesa</label>
+                    <select asp-for="IdMesa" asp-items="ViewBag.Mesas" class="form-control">
+                        <option value="">-- Sin mesa asignada --</option>
+                    </select>
+                    <span asp-validation-for="IdMesa" class="text-danger"></span>
+                </div>
             </div>
 
             <div class="row">
-
-                <!-- FECHA -->
-                <div class="col-md-6 mb-3">
-
-                    <label asp-for="FechaReserva"
-                           class="form-label">
-                        Fecha de Reserva
-                    </label>
-
-                    <input asp-for="FechaReserva"
-                           type="date"
-                           class="form-control" />
-
-                    <span asp-validation-for="FechaReserva"
-                          class="text-danger"></span>
-
+                <div class="col-md-4 mb-3">
+                    <label asp-for="FechaReserva" class="form-label">Fecha de Reserva</label>
+                    <input asp-for="FechaReserva" type="date" class="form-control" />
+                    <span asp-validation-for="FechaReserva" class="text-danger"></span>
                 </div>
 
-                <!-- HORA -->
-                <div class="col-md-6 mb-3">
-
-                    <label asp-for="HoraReserva"
-                           class="form-label">
-                        Hora de Reserva
-                    </label>
-
-                    <input asp-for="HoraReserva"
-                           type="time"
-                           class="form-control" />
-
-                    <span asp-validation-for="HoraReserva"
-                          class="text-danger"></span>
-
+                <div class="col-md-4 mb-3">
+                    <label asp-for="HoraReserva" class="form-label">Hora de Reserva</label>
+                    <input asp-for="HoraReserva" type="time" class="form-control" />
+                    <span asp-validation-for="HoraReserva" class="text-danger"></span>
                 </div>
 
+                <div class="col-md-4 mb-3">
+                    <label asp-for="CantidadPersonas" class="form-label">Cantidad de Personas</label>
+                    <input asp-for="CantidadPersonas" class="form-control" />
+                    <span asp-validation-for="CantidadPersonas" class="text-danger"></span>
+                </div>
             </div>
 
-            <!-- CANTIDAD PERSONAS -->
-            <div class="mb-3">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Origen de la Reserva</label>
+                    <select asp-for="Origen" class="form-control" style="pointer-events: none; background-color: #2a2a2a; color: #aaa;">
+                        <option value="Web">Web</option>
+                        <option value="Teléfono">Teléfono</option>
+                        <option value="Presencial">Presencial</option>
+                    </select>
+                    <span asp-validation-for="Origen" class="text-danger"></span>
+                </div>
 
-                <label asp-for="CantidadPersonas"
-                       class="form-label">
-                    Cantidad de Personas
-                </label>
-
-                <input asp-for="CantidadPersonas"
-                       class="form-control" />
-
-                <span asp-validation-for="CantidadPersonas"
-                      class="text-danger"></span>
-
+                <div class="col-md-6 mb-4">
+                    <label class="form-label text-warning fw-bold">Estado de la Reserva</label>
+                    <select asp-for="EstadoReserva" class="form-control bg-dark text-white border-warning">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Confirmada">Confirmada</option>
+                        <option value="Asistió">Asistió</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
+                    <span asp-validation-for="EstadoReserva" class="text-danger"></span>
+                </div>
             </div>
 
-            <!-- ORIGEN -->
-            <div class="mb-3">
-
-                <label class="form-label">
-                    Origen de la Reserva
-                </label>
-
-                <select asp-for="Origen"
-                        class="form-control">
-
-                    <option value="Web">Web</option>
-                    <option value="Teléfono">Teléfono</option>
-                    <option value="Presencial">Presencial</option>
-
-                </select>
-
-                <span asp-validation-for="Origen"
-                      class="text-danger"></span>
-
-            </div>
-
-            <!-- ESTADO -->
-            <div class="mb-4">
-
-                <label class="form-label">
-                    Estado de la Reserva
-                </label>
-
-                <select asp-for="EstadoReserva"
-                        class="form-control">
-
-                    <option value="Pendiente">Pendiente</option>
-                    <option value="Confirmada">Confirmada</option>
-                    <option value="Cancelada">Cancelada</option>
-
-                </select>
-
-                <span asp-validation-for="EstadoReserva"
-                      class="text-danger"></span>
-
-            </div>
-
-            <hr />
+            <hr class="border-secondary" />
 
             <div class="d-flex gap-2">
-
-                <button type="submit"
-                        class="btn btn-warning fw-bold">
+                <button type="submit" class="btn btn-warning fw-bold">
                     💾 Guardar Cambios
                 </button>
-
-                <a asp-action="Index"
-                   class="btn btn-outline-light">
+                <a asp-action="Index" class="btn btn-outline-light">
                     Cancelar
                 </a>
-
             </div>
-
         </form>
-
     </div>
-    ```
-
 </div>
 
 @section Scripts {

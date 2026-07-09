@@ -7,7 +7,7 @@ using SaborPrestigioMVC.Models;
 
 namespace SaborPrestigioMVC.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador, Cajero, Mozo, Cliente")]
     public class PedidosController : Controller
     {
         private readonly AppDbContext _context;
@@ -110,6 +110,22 @@ namespace SaborPrestigioMVC.Controllers
 
             if (ModelState.IsValid)
             {
+                // ====================================================================
+                // 🔥 NUEVO CÓDIGO: Agrupar platillos duplicados y sumar sus cantidades
+                // ====================================================================
+                var detallesAgrupados = pedido.DetallePedidos
+                    .GroupBy(d => d.IdPlatillo)
+                    .Select(g => new DetallePedido
+                    {
+                        IdPlatillo = g.Key,
+                        Cantidad = g.Sum(x => x.Cantidad),
+                        NotasChef = g.FirstOrDefault()?.NotasChef
+                    }).ToList();
+
+                // Reemplazamos la lista original con la lista limpia y agrupada
+                pedido.DetallePedidos = detallesAgrupados;
+                // ====================================================================
+
                 decimal totalConsolidado = 0;
 
                 foreach (var detalle in pedido.DetallePedidos!)
@@ -129,7 +145,8 @@ namespace SaborPrestigioMVC.Controllers
                             var insumoAlmacen = await _context.Insumos.FindAsync(ingrediente.IdInsumo);
                             if (insumoAlmacen != null)
                             {
-                                int cantidadADescontar = ingrediente.CantidadRequerida * detalle.Cantidad;
+                                // IMPORTANTE: Aquí ahora descuenta del stock la cantidad sumada correcta
+                                int cantidadADescontar = (int)(ingrediente.CantidadRequerida * detalle.Cantidad);
                                 insumoAlmacen.StockActual -= cantidadADescontar;
                                 _context.Update(insumoAlmacen);
                             }
@@ -174,6 +191,35 @@ namespace SaborPrestigioMVC.Controllers
                     IdPlatillo = p.IdPlatillo,
                     NombrePrecio = $"{p.NombrePlatillo} (S/ {p.PrecioVenta})"
                 }).ToList();
+
+            return View(pedido);
+        }
+
+        // GET: PEDIDOS/Edit/5
+        [Authorize(Roles = "Administrador, Cajero, Mozo")]
+        public async Task<IActionResult> Edit(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Traemos el pedido incluyendo al cliente, la mesa y LOS DETALLES (platillos)
+            var pedido = await _context.Pedidos
+                .Include(p => p.Cliente)
+                .Include(p => p.DetallePedidos!)
+                    .ThenInclude(d => d.Platillo)
+                .FirstOrDefaultAsync(m => m.IdPedido == id);
+
+            if (pedido == null)
+            {
+                return NotFound();
+            }
+
+            // Cargamos los combos necesarios
+            ViewBag.Clientes = new SelectList(_context.Clientes, "IdCliente", "Nombre", pedido.IdCliente);
+            ViewBag.Empleados = new SelectList(_context.Empleados, "IdEmpleado", "Nombre", pedido.IdEmpleado);
+            ViewBag.Mesas = new SelectList(_context.Mesas, "IdMesa", "NumeroMesa", pedido.IdMesa);
 
             return View(pedido);
         }
